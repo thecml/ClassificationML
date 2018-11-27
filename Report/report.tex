@@ -52,6 +52,23 @@ To classify any observation $x_{i}$ we find the smallest distance to any mean ve
 
 \subsection{Nearest subclass centroid classifier}
 
+Similar to nearest class centroid, but each class $c_{k}$ now has subclasses $m$ that follow a normal distribution and has a mean vector $\mu_{km}$: $$ \mu_{km} = \frac{1}{N_{km}} \sum_{i,li=k, qi=m}^{} x_{i} $$ where $N_{km}$ denotes the number of observations in a given subclass and $x_{i}$ is a observation with a subclass label $qi$. Like NCC, the distance to the subclass mean is used to classify each observation: $$ d(x_{i},\mu_{km}) = ||x_{i}-\mu_{km}||^2_{2} $$
+
+The number of subclasses is a hyper parameter for NSC and must be decided prior. Nearest subclass classifier is a compromise between nearest mean and nearest neighbor and combines the flexibility of nearest neighbor with the robustness of nearest mean, which we describer next. When the number of subclasses $m$ is equal to $N$ samples, we have the nearest neighbor classifier.
+
+\subsection{Nearest neighbor classifier}
+
+The nearest neighbor (NN) classifier is a simple algorithm where each sample is assigned to the class of its closest neighbor, or the most common class among its $k$ nearest neighbors in the k-NN variant. Pure NN is when $k=1$, but often $k>1$ where a majority vote takes place. The algorithm uses euclidean distance between a test sample $x_{i}$ with class $c_{k}$ and a training one $y_{i}$: $$ d(x_{i},y_{i}) = ||x_{i}-y_{i}||^2_{2} $$
+
+\subsection{Perceptron learning with backpropagation}
+
+A perceptron is a supervised algorithm of binary classifiers, that classify whether or not an input sample $x_{i}$ belong to class $c_{k}$. It uses the linear discriminant function $f(x) = w^T*x + w_{0}$, where $w$ are weights, $x\varepsilon$ $\mathbb{R^D}$ a feature vector and $w_{0}$ the bias. $w$ represent the orientation of the discriminant hyperplane, and $w_{0}$ a offset from the origin. Given weights $w$, sample $x_{i}$ and classes $c_{1}$ and $c_{2}$, the function splits the feature space into these two classes. If $g(w,x_{i}) > 0$, $x_{i}$ belongs to $c_{1}$ and if $g(w,x_{i}) < 0$, $x_{i}$ belongs to $c_{1}$. If $g(w,x_{i}) = 0$, it can be classified to either class. The resulting scalar is the distance of $x_{i}$ to the hyperplane. The function is used in our perceptron to follow, where we define a binary label $l_{i}$ for each sample to express the criterion function: $$ f(w^*,x_{i}) = l_{i} g(w,x_{i}) = l_{i} w^{*T} x_{i} \geq 0, i = 1, ..., N $$
+
+
+
+
+
+
 
 %\end{frontmatter}
 
@@ -73,7 +90,7 @@ To classify any observation $x_{i}$ we find the smallest distance to any mean ve
 %% References with bibTeX database:
 
 \bibliographystyle{model1-num-names}
-\bibliography{sample.bib}
+\bibliography{literature.bib}
 
 %% Authors are advised to submit their bibtex database files. They are
 %% requested to list a bibtex style file in the manuscript if they do
