@@ -75,6 +75,7 @@ scatter(1:length(resLabels),resLabels, [])
 
 %NSC TEST
 %nearest centroid
+centroids = train_nsc(trainData, trainLbls, 40, 2)
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
