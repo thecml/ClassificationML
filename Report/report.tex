@@ -64,9 +64,15 @@ The nearest neighbor (NN) classifier is a simple algorithm where each sample is 
 
 A perceptron is a supervised algorithm of binary classifiers, that classify whether or not an input sample $x_{i}$ belong to class $c_{k}$. It uses the linear discriminant function $f(x) = w^T*x + w_{0}$, where $w$ are weights, $x\varepsilon$ $\mathbb{R^D}$ a feature vector and $w_{0}$ the bias. $w$ represent the orientation of the discriminant hyperplane, and $w_{0}$ a offset from the origin. Given weights $w$, sample $x_{i}$ and classes $c_{1}$ and $c_{2}$, the function splits the feature space into these two classes. If $g(w,x_{i}) > 0$, $x_{i}$ belongs to $c_{1}$ and if $g(w,x_{i}) < 0$, $x_{i}$ belongs to $c_{1}$. If $g(w,x_{i}) = 0$, it can be classified to either class. The resulting scalar is the distance of $x_{i}$ to the hyperplane. The function is used in our perceptron to follow, where we define a binary label $l_{i}$ for each sample to express the criterion function: $$ f(w^*,x_{i}) = l_{i} g(w,x_{i}) = l_{i} w^{*T} x_{i} \geq 0, i = 1, ..., N $$
 
+All samples are correctly classified, if $f(w_{*}, x_{i}) \geq 0$. To produce such result, we need to optimize weights $w_{*}$ by the perceptron criterion function for $w_{*}$, where ${\jmath}_{p}(w_{*}) = 0$ would be a solution for $w_{*}$: $$ {\jmath}_{p}(w) = \sum_{x_{i} \varepsilon \chi}^{} -f(w,x_{i}) = \sum_{x_{i} \varepsilon \chi}^{} -l_{i} w^T x_{i} $$
 
+To optimize ${\jmath}_{p}(w)$, we use the gradient at $w$ and follow it to update $w$, where $\eta$ is the rate of change (learning rate) and expresses how fast it converges, and $\varepsilon$ express a vector set of mislabeled samples:
 
+$$ w(t+1) = w(t) - \eta(t) \nabla{\jmath}_{p} = w(t) + \eta(t) \sum_{x_{i} \varepsilon \chi}^{} l_{i} x_{i} $$
 
+At each learning iteration, the weights $w(t)$ are "punished" by the sum of misclassified samples scaled, leading to convergence as the result of criterion function ${\jmath}_{p}$ will be higher. The algorithm to come will elaborate on this.
+
+\subsection{Perceptron learning with MSE}
 
 
 
