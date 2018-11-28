@@ -19,6 +19,6 @@ for i = 1:nClasses
     n(i,:) = sum(trainLbls==classes(i));
     [idx,clst] = kmeans(trainData(:,nIndex:nIndex+n(i))', nSubClasses);
     nIndex = nIndex+n(i)-1;
-    centroids(:,centroidIdx(i):centroidIdx(i)+1) = clst';
+    centroids(:,centroidIdx(i):centroidIdx(i)+nSubClasses-1) = clst';
 end
 end

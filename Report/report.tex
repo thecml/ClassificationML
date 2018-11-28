@@ -168,22 +168,17 @@ We make an initial k-means clustering of the training data for $k=m$ subclasses 
 \begin{minipage}[H]{0.95\linewidth}
 	\begin{lstlisting}[caption=Implementation of NSC., label={lst:nsc}]
 	train_nsc(trainData, trainLbls, nC, nSubClasses) {
-	centroids = zero vector by size of trainData*(nClasses*nSubClasses)
-	n = zero vector by size of 1*nClasses
-	index = 1;
-	centroidIdx = vector to keep index of centroids
+		centroids = zero vector by size of trainData*(nClasses*nSubClasses)
+		n = zero vector by size of 1*nClasses
+		index = 1;
+		centroidIdx = vector to keep index of centroids
 	
-	for (i = 1; i <= nClasses;i++) {
-		n(i) = sum(num of classes i in trainLbls)
-		[idx,clst] = kmeans(trainData for index+n(i), nSubClasses)
-		centroids()
-		index = index+n(i)
-	}
-		
-		
-	mu(i) = sum(each traning sample from index to n(i))/n(i)		
-	index = index+n(i)
-	}
+		for (i = 1; i <= nClasses;i++) {
+			n(i) = sum(num of classes i in trainLbls)
+			[idx,clst] = kmeans(trainData for index+n(i), nSubClasses)
+			centroids()
+			index = index+n(i)-1;
+		}
 	}
 	\end{lstlisting}
 \end{minipage}
