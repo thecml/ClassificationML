@@ -9,6 +9,7 @@ trainData = trainData(:,1:nPixels)';
 
 train_tilde = [ones(1,size(trainData,2));trainData];
 w = rand(size(trainData,1)+1, nClasses);
+nTrainImages = size(trainData,2);
 
 %train perceptron
 for k = 1:nClasses
@@ -26,6 +27,7 @@ for k = 1:nClasses
             %criterion function
             f = label*w(:,k)'*x_i;
             if f < 0
+               % save vector and labels that were wrong
                X = [X x_i];
                wrongLabels = [wrongLabels label];
             end
