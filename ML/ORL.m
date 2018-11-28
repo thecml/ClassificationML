@@ -97,6 +97,9 @@ scatter(1:length(test_labels),test_labels, [], 'blue')
 
 
 
+
+
+
 %perceptron TEST MSE
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages

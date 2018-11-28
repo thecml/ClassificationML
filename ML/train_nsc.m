@@ -9,7 +9,7 @@ trainData = trainData(:,1:nPixels)';
 
 %kmeans for nSubClasses
 %column(i:i+1) belongs to class K
-classes = 1:nClasses
+classes = trainLbls(1):nClasses
 centroids = zeros(size(trainData,1), nClasses*nSubClasses);
 n = zeros(size(classes,1),size(classes,2))';
 nIndex = 1;

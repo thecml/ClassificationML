@@ -16,3 +16,11 @@ test_labels = loadMNISTLabels('data\t10k-labels.idx1-ubyte');
 
 pc = pca_reduce(train_images, 2);
 scatter(pc(1,:), pc(2,:), [], train_labels);
+
+
+
+
+
+%NSC TEST
+%nearest centroid
+centroids = train_nsc(train_images, train_labels, 10, 2)
