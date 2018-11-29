@@ -34,7 +34,7 @@ end
 resLabels = resLabels-1;
 
 %accuracy in %
-disp("MNIST NC PCA accuracy:")
+disp("MNIST NC accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %plot result labels
@@ -65,7 +65,7 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/2
-disp("MNIST NSC-2 PCA accuracy:")
+disp("MNIST NSC-2 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %plot result and test labels
@@ -98,7 +98,7 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/3
-disp("MNIST NSC-3 PCA accuracy:")
+disp("MNIST NSC-3 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %% Nearest Subclass Centroid Test - 5 subclasses
@@ -122,14 +122,14 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/5
-disp("MNIST NSC-5 PCA accuracy:")
+disp("MNIST NSC-5 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %% Nearest Neighbor Test
 resLabels = train_nn(train_images, train_labels, test_images);
 
 %accuracy in %
-disp("MNIST NN PCA accuracy:")
+disp("MNIST NN accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %plot result and test labels
@@ -140,6 +140,72 @@ scatter(1:length(test_labels),test_labels, 5, 'blue')
 title('Plot of NN on MNIST for 10 classes')
 xlabel('N result label') 
 ylabel('result label in class') 
+
+%% Perceptron Test BP
+w = train_perceptron_backprop(train_images, train_labels, 0.01, nClasses);
+test_tilde = [ones(1,size(test_images,2));test_images];
+resLabels = zeros(1, nTestImages);
+for i = 1:nTestImages
+    resClass = [];
+    for k = 1:nClasses
+        %calculate decision funciton and save it
+        y = w(:,k)'*test_tilde(:,i);
+        resClass = [resClass y]; 
+    end
+    %take the result which maximizes the cost function
+    [~,resLabels(i)] = max(resClass);
+end
+
+%accuracy in %
+resLabels = resLabels';
+disp("MNIST PCEP-BP accuracy:")
+accuracy = sum(resLabels==testLbls)/nTestImages
+
+%plot result labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels)
+title('Plot of Perceptron with BP on MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+%% Perceptron Test MSE
+w = train_perceptron_mse(train_images, train_labels, nClasses);
+test_tilde = [ones(1,size(test_images,2));test_images];
+resLabels = zeros(1, nTestImages);
+for i = 1:nTestImages
+    resClass = [];
+    for k = 1:nClasses
+        %calculate decision funciton and save it
+        y = w(:,k)'*test_tilde(:,i);
+        resClass = [resClass y]; 
+    end
+    %take the result which maximizes the cost function
+    [~,resLabels(i)] = max(resClass);
+end
+
+%accuracy in %
+resLabels = resLabels';
+disp("MNIST PCEP-MSE accuracy:")
+accuracy = sum(resLabels==testLbls)/nTestImages
+
+%plot result labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels)
+title('Plot of Perceptron with MSE on MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+
+
+
+
+
+
+
+
+
 
 
 

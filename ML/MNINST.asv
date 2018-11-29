@@ -20,29 +20,13 @@ test_labels = sortrows(test_labels);
 train_images = train_images(:,1:nPixels)';
 test_images = test_images(:,1:nPixels)';
 
-%% PCA for train data
-pc_train = pca_reduce(train_images, 2);
-figure
-scatter(pc_train(1,:), pc_train(2,:), [], train_labels);
-title('Scatter plot of PCA on the MNIST train set with D=2')
-xlabel('PC1') 
-ylabel('PC2')
-
-%% PCA for test data
-pc_test = pca_reduce(test_images, 2);
-figure
-scatter(pc_test(1,:), pc_test(2,:), [], test_labels);
-title('Scatter plot of PCA on the MNIST test set with D=2')
-xlabel('PC1') 
-ylabel('PC2')
-
-%% Nearest Centroid Test (PCA)
-mu = train_nc(pc_train, train_labels, nClasses, offset);
+%% Nearest Centroid Test
+mu = train_nc(train_images, train_labels, nClasses, offset);
 dist = zeros(nTestImages, nClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses
-        dist(i,k) = norm(pc_test(:,i)-mu(:,k),2)^2;
+        dist(i,k) = norm(test_images(:,i)-mu(:,k),2)^2;
     end 
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -50,17 +34,24 @@ end
 resLabels = resLabels-1;
 
 %accuracy in %
-disp("MNIST NC PCA accuracy:")
+disp("MNIST NC accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Subclass Centroid Test - 2 subclasses (PCA)
+%plot result labels
+figure
+scatter(1:length(resLabels),resLabels, [])
+title('Plot of NC on the MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+%% Nearest Subclass Centroid Test - 2 subclasses
 nSubClasses = 2;
-centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -74,17 +65,26 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/2
-disp("MNIST NSC-2 PCA accuracy:")
+disp("MNIST NSC-2 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Subclass Centroid Test - 3 subclasses (PCA)
+%plot result and test labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels, 50, 'red')
+scatter(1:length(test_labels),test_labels, 5, 'blue')
+title('Plot of NSC on MNIST for 10/2 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+%% Nearest Subclass Centroid Test - 3 subclasses
 nSubClasses = 3;
-centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -98,17 +98,17 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/3
-disp("MNIST NSC-3 PCA accuracy:")
+disp("MNIST NSC-3 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Subclass Centroid Test - 5 subclasses (PCA)
+%% Nearest Subclass Centroid Test - 5 subclasses
 nSubClasses = 5;
-centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -122,18 +122,26 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/5
-disp("MNIST NSC-5 PCA accuracy:")
+disp("MNIST NSC-5 accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Neighbor Test (PCA)
-resLabels = train_nn(pc_train, train_labels, pc_test);
+%% Nearest Neighbor Test
+resLabels = train_nn(train_images, train_labels, test_images);
 
 %accuracy in %
+disp("MNIST NN accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Perceptron Test BP (PCA)
-w = train_perceptron_backprop(pc_train, train_labels, 0.01, nClasses);
-test_tilde = [ones(1,size(pc_test,2));pc_test];
+%plot result and test labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels, 50, 'red')
+scatter(1:length(test_labels),test_labels, 5, 'blue')
+title('Plot of NN on MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+%% Perceptron Test BP
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
     resClass = [];
@@ -148,12 +156,18 @@ end
 
 %accuracy in %
 resLabels = resLabels';
-disp("MNIST PCEP-BP PCA accuracy:")
-accuracy = sum(resLabels==test_labels)/nTestImages
+disp("MNIST PCEP-BP accuracy:")
+accuracy = sum(resLabels==testLbls)/nTestImages
 
-%% Perceptron Test MSE (PCA)
-w = train_perceptron_mse(pc_train, train_labels, nClasses);
-test_tilde = [ones(1,size(pc_test,2));pc_test];
+%plot result labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels)
+title('Plot of Perceptron with BP on MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
+%% Perceptron Test MSE
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
     resClass = [];
@@ -168,7 +182,26 @@ end
 
 %accuracy in %
 resLabels = resLabels';
-disp("MNIST PCEP-MSE PCA accuracy:")
-accuracy = sum(resLabels==test_labels)/nTestImages
+disp("MNIST PCEP-MSE accuracy:")
+accuracy = sum(resLabels==testLbls)/nTestImages
+
+%plot result labels
+
+scatter(1:length(resLabels),resLabels)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

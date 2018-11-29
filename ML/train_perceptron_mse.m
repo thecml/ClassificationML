@@ -11,7 +11,7 @@ nTrainImages = size(trainData,2);
 train_tilde = [ones(1,size(trainData,2));trainData];
 w = rand(size(trainData,1)+1, nClasses);
 
-%find pseudoinverse
+%find pseudo-inverse
 %X=pinv of train_tilde, b = [1,..1], a=weights
 X = (train_tilde'*train_tilde)^-1*train_tilde';
 

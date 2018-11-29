@@ -1,12 +1,5 @@
 function w = train_perceptron_backprop(trainData, trainLbls, eta, nClasses)
 
-%preprocessor
-%sort the train data samples and labels in ascending order.
-nPixels = size(trainData,1);
-trainData = sortrows([trainData; trainLbls']',nPixels+1);
-trainLbls = sortrows(trainLbls);
-trainData = trainData(:,1:nPixels)';
-
 train_tilde = [ones(1,size(trainData,2));trainData];
 w = rand(size(trainData,1)+1, nClasses);
 nTrainImages = size(trainData,2);
