@@ -3,19 +3,50 @@ clear
 load('orl_train_test_data');
 load('orl_train_test_lbls');
 
+% Run PCA
+%pc = pca_reduce(trainData, 2);
+%figure
+%scatter(pc(1,:), pc(2,:), [], trainLbls);
+%title('Scatter plot of PCA on the ORL set with D=2')
+%xlabel('PC1') 
+%ylabel('PC2') 
 
-pc = pca_reduce(trainData, 2);
-scatter(pc(1,:), pc(2,:), [], trainLbls);
-
-
-
-
-
-
+% Global information for ORL
 nClasses = 40;
+offset = 1;
+nPixels = 1200;
 nTrainImages = size(trainData,2);
 nTestImages = size(testData,2);
-eta = 0.01;
+
+%preprocessor - sort samples and labels in ascending order.
+trainData = sortrows([trainData; trainLbls']',nPixels+1);
+testData = sortrows([testData; testLbls']',nPixels+1);
+trainLbls = sortrows(trainLbls);
+testLbls = sortrows(testLbls);
+trainData = trainData(:,1:nPixels)';
+testData = testData(:,1:nPixels)';
+
+%NC TEST
+dist = zeros(nTestImages, nClasses);
+mu = train_nc(trainData, trainLbls, nClasses, offset);
+resLabels = zeros(nTestImages, 1);
+for i = 1:nTestImages
+    for k = 1:nClasses
+        dist(i,k) = norm(testData(:,i)-mu(:,k),2)^2;
+    end 
+    [~,resLabels(i)] = min(dist(i,:));
+end
+
+%accuracy in %
+accuracy = sum(resLabels==testLbls)/nTestImages
+
+%plot result labels
+figure
+scatter(1:length(resLabels),resLabels, [])
+title('Plot of Nearest Cenroid on the MNIST for 10 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
+
 
 
 
@@ -25,6 +56,7 @@ eta = 0.01;
 
 
 %NN TEST
+idx = train_nn(trainData, testData);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for j = 1:nTrainImages
@@ -50,23 +82,6 @@ scatter(1:length(test_labels),test_labels, [], 'blue')
 
 
 
-
-
-%NC TEST
-dist = zeros(nTestImages, nClasses);
-resLabels = zeros(nTestImages, 1);
-for i = 1:nTestImages
-    for k = 1:nClasses
-        dist(i,k) = norm(test_images(:,i)-mu(:,k),2)^2;
-    end 
-    [~,resLabels(i)] = min(dist(i,:));
-end
-
-%accuracy in %
-accuracy = sum(resLabels-1==test_labels)/nTestImages
-
-%plot result labels
-scatter(1:length(resLabels),resLabels, [])
 
 
 

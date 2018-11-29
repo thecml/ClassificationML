@@ -185,7 +185,64 @@ We make an initial k-means clustering of the training data for $k=m$ subclasses 
 
 \subsection{Perceptron with backpropagation} 
 
+The algorithm trains a perceptron to correctly classify each sample $x_{i}$ to class $c_{k}$. We start with an empty vector $\chi$, then create a label $l_{i}$ for sample $x_{i}$ setting it to 1 if it corresponds to our current class, otherwise -1. We then use a one-vs-rest criterion function $f(w,x)$ for the $x_{i}$'s, save the wrongly classified samples and labels, then summing the wrong samples times their label and use this value to update weights $w_{k}$ iteratively. The learning eta $\eta$ is a hyper parameter. Listing \ref{lst:pbp} is the pseudo-code for this.
 
+\begin{minipage}[H]{0.95\linewidth}
+	\begin{lstlisting}[caption=Implementation of NSC., label={lst:pbp}]
+	train_perp_bp(trainData, trainLbls, eta, nClasses) {
+	w = random W matrix with size trainData*nCLasses
+	
+	for (k = 1; k <= nClasses; k++) {
+		wrongLabels = empty matrix to save labels
+		done = false, i = 0
+		while (not done) {
+			X = empty matrix for wrong x_i's
+			for (i = 1; i <= nTrainImages, i++) {
+				x_i = trainData(i)
+				if(trainlbls(i) = k) label = 1 else label = -1
+				if (label*w(k)*x_i) < 0
+					save x_i to X, save label to WrongLabels
+			}
+			sumOfWrongs = sum(WrongLabels * X)
+			w(k) = w(k) + eta * sumOfWrongs
+			ifEmpty(X)
+				done = true
+			}
+		}
+	}
+	\end{lstlisting}
+\end{minipage}
+
+\subsection{Perceptron with MSE} 
+
+The algorithm for MSE is simplified, but possibly more computational demanding. We start by finding the pseudo-inverse of our training data set, then create a label vector for each class $c_{k}$ with $l_{i} = 1$ if the label is in the class or $l_{i} = -1$ if it is not. Finally we find the MSE solution by multiplying the two for weight $W_{k}$. Listing \ref{lst:pmse} shows this.
+
+\begin{minipage}[H]{0.95\linewidth}
+	\begin{lstlisting}[caption=Implementation of NSC., label={lst:pmse}]
+	train_perp_mse(trainData, trainLbls, nClasses) {
+		w = random W matrix with size trainData*nCLasses
+		X = pseudo-inverse of trainData
+		
+		for (k = 1; k <= nClasses; k++) {
+			Labels = empty matrix to save labels
+			for (i = 1; i <= nTrainImages; i++)
+				if (trainlbls(i) = k)
+					save 1 to Labels
+				else save -1 to Labels
+			}
+			w(:,k) = X*Labels;
+		}
+	}
+	\end{lstlisting}
+\end{minipage}
+
+\section{Results}
+
+The five classification schemes are trained and tested on the ORL and MNIST data set with scatter plots to visualize the resulting labels compared to the testing ones and a confusion matrix that depicts the predicated and true class. Each algorithm is tested with both the PCA and the full version of the data. We start by showing the output of the PCA analysis, and then proceed to the classifications.
+
+\subsection{PCA}
+
+\subsection{NCC}
 
 
 
