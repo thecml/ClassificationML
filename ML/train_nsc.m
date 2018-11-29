@@ -3,7 +3,7 @@ function centroids = train_nsc(trainData, trainLbls, nClasses, nSubClasses)
 %Nearest Subclass Centroid
 %kmeans for nSubClasses
 %column(i:i+1) belongs to class K
-classes = trainLbls(1):nClasses
+classes = trainLbls(1):nClasses;
 centroids = zeros(size(trainData,1), nClasses*nSubClasses);
 n = zeros(size(classes,1),size(classes,2))';
 nIndex = 1;

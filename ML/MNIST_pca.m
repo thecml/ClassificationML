@@ -20,13 +20,29 @@ test_labels = sortrows(test_labels);
 train_images = train_images(:,1:nPixels)';
 test_images = test_images(:,1:nPixels)';
 
-%% Nearest Centroid Test
-mu = train_nc(train_images, train_labels, nClasses, offset);
+%% PCA for train data
+pc_train = pca_reduce(train_images, 2);
+figure
+scatter(pc_train(1,:), pc_train(2,:), [], train_labels);
+title('Scatter plot of PCA on the MNIST train set with D=2')
+xlabel('PC1') 
+ylabel('PC2')
+
+%% PCA for test data
+pc_test = pca_reduce(test_images, 2);
+figure
+scatter(pc_test(1,:), pc_test(2,:), [], test_labels);
+title('Scatter plot of PCA on the MNIST test set with D=2')
+xlabel('PC1') 
+ylabel('PC2')
+
+%% Nearest Centroid Test (PCA)
+mu = train_nc(pc_train, train_labels, nClasses, offset);
 dist = zeros(nTestImages, nClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses
-        dist(i,k) = norm(test_images(:,i)-mu(:,k),2)^2;
+        dist(i,k) = norm(pc_test(:,i)-mu(:,k),2)^2;
     end 
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -34,24 +50,16 @@ end
 resLabels = resLabels-1;
 
 %accuracy in %
-disp("MNIST NC PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%plot result labels
-figure
-scatter(1:length(resLabels),resLabels, [])
-title('Plot of NC on the MNIST for 10 classes')
-xlabel('N result label') 
-ylabel('result label in class') 
-
-%% Nearest Subclass Centroid Test - 2 subclasses
+%% Nearest Subclass Centroid Test - 2 subclasses (PCA)
 nSubClasses = 2;
-centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -65,26 +73,16 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/2
-disp("MNIST NSC-2 PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%plot result and test labels
-figure
-hold on
-scatter(1:length(resLabels),resLabels, 50, 'red')
-scatter(1:length(test_labels),test_labels, 5, 'blue')
-title('Plot of NSC on MNIST for 10/2 classes')
-xlabel('N result label') 
-ylabel('result label in class') 
-
-%% Nearest Subclass Centroid Test - 3 subclasses
+%% Nearest Subclass Centroid Test - 3 subclasses (PCA)
 nSubClasses = 3;
-centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -98,17 +96,16 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/3
-disp("MNIST NSC-3 PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Subclass Centroid Test - 5 subclasses
+%% Nearest Subclass Centroid Test - 5 subclasses (PCA)
 nSubClasses = 5;
-centroids = train_nsc(train_images, train_labels, nClasses, nSubClasses);
+centroids = train_nsc(pc_train, train_labels, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
 resLabels = zeros(nTestImages, 1);
 for i = 1:nTestImages
     for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(test_images(:,i)-centroids(:,k),2)^2;
+        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
     end
     [~,resLabels(i)] = min(dist(i,:));
 end
@@ -122,27 +119,13 @@ end
 resLabels = resLabels-1;
 
 %accuracy in % for 10/5
-disp("MNIST NSC-5 PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
-%% Nearest Neighbor Test
-resLabels = train_nn(train_images, train_labels, test_images);
+%% Nearest Neighbor Test (PCA)
+resLabels = train_nn(pc_train, train_labels, pc_test);
 
 %accuracy in %
-disp("MNIST NN PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
-
-%plot result and test labels
-figure
-hold on
-scatter(1:length(resLabels),resLabels, 50, 'red')
-scatter(1:length(test_labels),test_labels, 5, 'blue')
-title('Plot of NN on MNIST for 10 classes')
-xlabel('N result label') 
-ylabel('result label in class') 
-
-
-
 
 
 

@@ -1,15 +1,16 @@
-function idx = train_nn(trainData, testData) 
+function resLabels = train_nn(trainData, trainLbls, testData) 
 
 nTrainImages = size(trainData,2);
 nTestImages = size(testData,2);
+resLabels = zeros(nTestImages, 1);
 
 dist = zeros(nTestImages, nTrainImages);
 idx = [];
 for i = 1:nTestImages
     for j = 1:nTrainImages
         %find the i closest to j
-        dist(i,j) = norm(test_images(:,i)-train_images(:,j),2)^2;
+        dist(i,j) = norm(testData(:,i)-trainData(:,j),2)^2;
     end
     [M,I] = min(dist(i,:));
-    idx = [idx I];
+    resLabels(i) = trainLbls(I);
 end
