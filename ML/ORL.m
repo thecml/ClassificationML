@@ -147,6 +147,7 @@ ylabel('result label in class')
 
 
 %perceptron TEST MSE
+w = train_perceptron_mse(trainData, trainLbls, nClasses, offset);
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
     resClass = [];

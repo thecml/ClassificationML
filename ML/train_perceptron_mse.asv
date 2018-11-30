@@ -21,7 +21,5 @@ for k = offset:nClasses
         end
     end
     %find MSE soluion
-    if (offset == 0) w(:,k+1) = X'*lbls';
-    else w(:,k) = X'*lbls';
-    end
+    w(:,k) = X'*lbls';
 end
