@@ -40,7 +40,7 @@ title('Plot of Nearest Cenroid on the ORL for 40 classes')
 xlabel('N result label') 
 ylabel('result label in class')
 
-%% Nearest Subclass Centroid Test - 2 subclasses
+%% Nearest Subclass Centroid Test
 nSubClasses = 2;
 centroids = train_nsc(trainData, trainLbls, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
@@ -57,8 +57,8 @@ for i = 1:length(resLabels)
    resLabels(i) = ceil(resLabels(i)/nSubClasses);
 end
 
-%accuracy in % for 40/2
-disp("ORL NSC-2 PCA accuracy:")
+%accuracy in % for 40
+disp("ORL NSC PCA accuracy:")
 accuracy = sum(resLabels==testLbls)/nTestImages
 
 %plot result and test labels
@@ -69,48 +69,6 @@ scatter(1:length(testLbls),testLbls, 5, 'blue')
 title('Plot of NSC on ORL for 40/2 classes')
 xlabel('N result label') 
 ylabel('result label in class') 
-
-%% Nearest Subclass Centroid Test - 3 subclasses
-nSubClasses = 3;
-centroids = train_nsc(trainData, trainLbls, nClasses, nSubClasses);
-dist = zeros(nTestImages, nClasses*nSubClasses);
-resLabels = zeros(nTestImages, 1);
-for i = 1:nTestImages
-    for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(testData(:,i)-centroids(:,k),2)^2;
-    end
-    [~,resLabels(i)] = min(dist(i,:));
-end
-
-%convert reslabels to one class dimension.
-for i = 1:length(resLabels)
-   resLabels(i) = ceil(resLabels(i)/nSubClasses);
-end
-
-%accuracy in % for 40/3
-disp("ORL NSC-3 PCA accuracy:")
-accuracy = sum(resLabels==testLbls)/nTestImages
-
-%% Nearest Subclass Centroid Test - 5 subclasses
-nSubClasses = 5;
-centroids = train_nsc(trainData, trainLbls, nClasses, nSubClasses);
-dist = zeros(nTestImages, nClasses*nSubClasses);
-resLabels = zeros(nTestImages, 1);
-for i = 1:nTestImages
-    for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(testData(:,i)-centroids(:,k),2)^2;
-    end
-    [~,resLabels(i)] = min(dist(i,:));
-end
-
-%convert reslabels to one class dimension.
-for i = 1:length(resLabels)
-   resLabels(i) = ceil(resLabels(i)/nSubClasses);
-end
-
-%accuracy in % for 40/5
-disp("ORL NSC-5 PCA accuracy:")
-accuracy = sum(resLabels==testLbls)/nTestImages
 
 %% Nearest Neighbor Test
 resLabels = train_nn(trainData, trainLbls, testData);
@@ -129,7 +87,7 @@ xlabel('N result label')
 ylabel('result label in class') 
 
 %% Perceptron Test BP
-w = train_perceptron_backprop(trainData, trainLbls, 0.1, nClasses);
+w = train_perceptron_backprop(trainData, trainLbls, 0.01, nClasses, offset);
 resLabels = zeros(1, nTestImages);
 test_tilde = [ones(1,size(testData,2));testData];
 for i = 1:nTestImages
@@ -184,5 +142,4 @@ scatter(1:length(resLabels),resLabels)
 title('Plot of Perceptron with MSE on ORL for 40 classes')
 xlabel('N result label') 
 ylabel('result label in class') 
-
 

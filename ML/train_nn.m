@@ -5,7 +5,6 @@ nTestImages = size(testData,2);
 resLabels = zeros(nTestImages, 1);
 
 dist = zeros(nTestImages, nTrainImages);
-idx = [];
 for i = 1:nTestImages
     for j = 1:nTrainImages
         %find the i closest to j

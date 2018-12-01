@@ -86,19 +86,19 @@ This section will explain fundamental theory behind the dimensional reduction te
 
 \subsection{Principal Component Analysis}
 
-PCA is a procedure that transform a set of observations or samples in dimension $D$ to a lower dimension $D-n$ while still preserving a smaller number of variables explaining the main features $X_{1}, X_{2}, ..., X_{p}$ in the original set. This is particularly useful when dealing with high dimension data, as this can be computationally hard and challenging to visualize. With PCA, we compute principal components $d$ of $n$ original samples with $p$ features, where $d$ is the desired output dimensionality and each dimension is a linear combination of the $p$ features. In practice, we find eigenvectors of the covariance matrix of the original data set, sort them by highest eigenvalue score and use these as weights $W$ in computing a linear transformation $$y_{i} = W^T*x_{i}, i = 1, ..., N$$. The scattering of the transformed data is the scatter matrix, a function of $X$: $$S_{T} = \sum_{i=1}^{N} [W^T(x_{i}-\mu)][W^T(x_{i}-\mu)]^T$$. The weights $W$ can be found by applying eigenanalysis and taking the eigenvectors with the  highest score, more formally optimizing: \[ W* = \argmax_c Tr (W^TS_{T}) \] subject to $ W^TW=I$. We end with a data set containing fewer ($d < D$) dimensions.
+PCA is a procedure that transform a set of observations or samples in dimension $D$ to a lower dimension $D-n$ while still preserving a smaller number of variables explaining the main features $X_{1}, X_{2}, ..., X_{p}$ in the original set\footnote{\cite{Casella}}. This is particularly useful when dealing with high dimension data, as this can be computationally hard and challenging to visualize. With PCA, we compute principal components $d$ of $n$ original samples with $p$ features, where $d$ is the desired output dimensionality and each dimension is a linear combination of the $p$ features. In practice, we find eigenvectors of the covariance matrix of the original data set, sort them by highest eigenvalue score and use these as weights $W$ in computing a linear transformation: $$y_{i} = W^T*x_{i}, i = 1, ..., N$$. The scattering of the transformed data is the scatter matrix given by \footnote{\cite{Iosifidis2017}}: $$S_{T} = \sum_{i=1}^{N} [W^T(x_{i}-\mu)][W^T(x_{i}-\mu)]^T$$. The weights $W$ can be found by applying eigenanalysis and taking the eigenvectors with the  highest score, more formally optimizing \footnote{\cite{Iosifidis2017}}: \[ W^* = \argmax_c Tr (W^TS_{T}) \] subject to $W^TW=I$. We end with a data set containing fewer ($d < D$) dimensions.
 
 \subsection{Nearest class centroid classifier}
 
-The NCC classifier assigns labels $l_{i}$ to $N$ observations determined by which class $c_{k}$'s mean (centroid) the observation $x_{i}$ is closest to. We make the assumption that each class follow a normal distribution, as they are given equal importance in the classification algorithm. The mean class vector is given by: $$ \mu_{k} = \frac{1}{N_{k}} \sum_{i,li=k}^{} x_{i}, k = 1, ... K. $$
+The NCC classifier assigns labels $l_{i}$ to $N$ observations determined by which class $c_{k}$'s mean (centroid) the observation $x_{i}$ is closest to. We make the assumption that each class follow a normal distribution, as they are given equal importance in the classification algorithm. The mean class vector is given by \footnote{\cite{Iosifidis2017}}: $$ \mu_{k} = \frac{1}{N_{k}} \sum_{i,li=k}^{} x_{i}, k = 1, ... K.$$
 
 To classify any observation $x_{i}$ we find the smallest distance to any mean vector and assign the label of that vector to it, more formally: $$ d(x_{i},\mu_{k}) = ||x_{i}-\mu_{k}||^2_{2} $$
 
 \subsection{Nearest subclass centroid classifier}
 
-Similar to nearest class centroid, but each class $c_{k}$ now has subclasses $m$ that follow a normal distribution and has a mean vector $\mu_{km}$: $$ \mu_{km} = \frac{1}{N_{km}} \sum_{i,li=k, qi=m}^{} x_{i} $$ where $N_{km}$ denotes the number of observations in a given subclass and $x_{i}$ is a observation with a subclass label $qi$. Like NCC, the distance to the subclass mean is used to classify each observation: $$ d(x_{i},\mu_{km}) = ||x_{i}-\mu_{km}||^2_{2} $$
+Similar to nearest class centroid, but each class $c_{k}$ now has subclasses $m$ that follow a normal distribution and has a mean vector $\mu_{km}$: $$ \mu_{km} = \frac{1}{N_{km}} \sum_{i,li=k, qi=m}^{} x_{i} $$ where $N_{km}$ denotes the number of observations in a given subclass and $x_{i}$ is a observation with a subclass label $qi$. Like NCC, the distance to the subclass mean is used to classify each observation \footnote{\cite{Iosifidis2017}}: $$ d(x_{i},\mu_{km}) = ||x_{i}-\mu_{km}||^2_{2} $$
 
-The number of subclasses is a hyper parameter for NSC and must be decided prior. Nearest subclass classifier is a compromise between nearest mean and nearest neighbor and combines the flexibility of nearest neighbor with the robustness of nearest mean, which we describer next. When the number of subclasses $m$ is equal to $N$ samples, we have the nearest neighbor classifier.
+The number of subclasses is a hyper parameter for NSC and must be decided prior. Nearest subclass classifier is a compromise between nearest mean and nearest neighbor and combines the flexibility of nearest neighbor with the robustness of nearest mean \footnote{\cite{Veenman2005}}. When the number of subclasses $m$ is equal to $N$ samples, we have the nearest neighbor classifier.
 
 \subsection{Nearest neighbor classifier}
 
@@ -106,9 +106,9 @@ The nearest neighbor (NN) classifier is a simple algorithm where each sample is 
 
 \subsection{Perceptron learning with backpropagation}
 
-A perceptron is a supervised algorithm of binary classifiers, that classify whether or not an input sample $x_{i}$ belong to class $c_{k}$. It uses the linear discriminant function $f(x) = w^T*x + w_{0}$, where $w$ are weights, $x\varepsilon$ $\mathbb{R^D}$ a feature vector and $w_{0}$ the bias. $w$ represent the orientation of the discriminant hyperplane, and $w_{0}$ a offset from the origin. Given weights $w$, sample $x_{i}$ and classes $c_{1}$ and $c_{2}$, the function splits the feature space into these two classes. If $g(w,x_{i}) > 0$, $x_{i}$ belongs to $c_{1}$ and if $g(w,x_{i}) < 0$, $x_{i}$ belongs to $c_{1}$. If $g(w,x_{i}) = 0$, it can be classified to either class. The resulting scalar is the distance of $x_{i}$ to the hyperplane. The function is used in our perceptron to follow, where we define a binary label $l_{i}$ for each sample to express the criterion function: $$ f(w^*,x_{i}) = l_{i} g(w,x_{i}) = l_{i} w^{*T} x_{i} \geq 0, i = 1, ..., N $$
+A perceptron is a supervised algorithm of binary classifiers, that classify whether or not an input sample $x_{i}$ belong to a class $c_{k}$. It uses the linear discriminant function $f(x) = w^T*x + w_{0}$, where $w$ are weights, $x\varepsilon$ $\mathbb{R^D}$ a feature vector and $w_{0}$ the bias\footnote{\cite{Iosifidis2017}}. $w$ represent the orientation of the discriminant hyperplane, and $w_{0}$ a offset from the origin. Given weights $w$, sample $x_{i}$ and classes $c_{1}$ and $c_{2}$, the function splits the feature space into these two classes. If $g(w,x_{i}) > 0$, $x_{i}$ belongs to $c_{1}$ and if $g(w,x_{i}) < 0$, $x_{i}$ belongs to $c_{1}$. If $g(w,x_{i}) = 0$, it can be classified to either class. The resulting scalar is the distance of $x_{i}$ to the hyperplane. The function is used in our perceptron to follow, where we define a binary label $l_{i}$ for each sample to express the criterion function: $$ f(w^*,x_{i}) = l_{i} g(w,x_{i}) = l_{i} w^{*T} x_{i} \geq 0, i = 1, ..., N $$
 
-All samples are correctly classified, if $f(w_{*}, x_{i}) \geq 0$. To produce such result, we need to optimize weights $w_{*}$ by the perceptron criterion function for $w_{*}$, where ${\jmath}_{p}(w_{*}) = 0$ would be a solution for $w_{*}$: $$ {\jmath}_{p}(w) = \sum_{x_{i} \varepsilon \chi}^{} -f(w,x_{i}) = \sum_{x_{i} \varepsilon \chi}^{} -l_{i} w^T x_{i} $$
+All samples are correctly classified, if $f(w_{*}, x_{i}) \geq 0$. To produce such result, we need to optimize weights $w_{*}$ by the perceptron criterion function for $w_{*}$, where ${\jmath}_{p}(w_{*}) = 0$ would be a solution for\footnote{\cite{Iosifidis2017}} $w_{*}$: $$ {\jmath}_{p}(w) = \sum_{x_{i} \varepsilon \chi}^{} -f(w,x_{i}) = \sum_{x_{i} \varepsilon \chi}^{} -l_{i} w^T x_{i} $$
 
 To optimize ${\jmath}_{p}(w)$, we use the gradient at $w$ and follow it to update $w$, where $\eta$ is the rate of change (learning rate) and expresses how fast it converges, and $\varepsilon$ express a vector set of mislabeled samples:
 
@@ -118,7 +118,7 @@ At each learning iteration, the weights $w(t)$ are "punished" by the sum of misc
 
 \subsection{Perceptron learning with MSE}
 
-As an alternative to backpropagation, one can apply least-mean square regression to obtain the perceptron weights $W$. Here we use a criterion function ${\jmath}_{LSE}$ that involves all of the samples, not just the misclassified ones. Previously we made the inner products of $f(X) = W^T*X$ positive, now we look to find a solution to $W^T X = t_{i}, i = 1, ..., N$, where $t_{i}$ are arbitrarily set positive constants. This is written as $X^T*w = b$ in matrix form. If X is nonsingular, we could write $W = X^-1 b$ and have a formal solution, but this is often not the case, however by obtaining the pseudo-inverse of $X$ one can find a solution for the weights: $$ X^\dagger = (X^tX)^{-1}X^T $$
+As an alternative to backpropagation, one can apply least-mean square regression to obtain the perceptron weights $W$. Here we use a criterion function ${\jmath}_{LSE}$ that involves all of the samples, not just the misclassified ones. Previously we made the inner products of $f(X) = W^T*X$ positive, now we look to find a solution to $W^T X = t_{i}, i = 1, ..., N$, where $t_{i}$ are arbitrarily set positive constants. This is written as $X^T*w = b$ in matrix form. If X is nonsingular, we could write $W = X^-1 b$ and have a formal solution, but this is often not the case, however by obtaining the pseudo-inverse of $X$ one can find a solution for the weights\footnote{\cite{Duda2012}}: $$ X^\dagger = (X^tX)^{-1}X^T $$
 
 Examining the criterion function, we look to minimize: $$ {\jmath}_{LSE} = ||W^T X - B||^2_{F} $$
 
@@ -149,7 +149,7 @@ The algorithm centers the data, then simply calculates eigenvectors from the var
 
 \subsection{NCC} 
 
-Simply calculate a mean vector for $c_{k}$ classes by summing the samples that belong te class and dividing that with the number of $N$ samples in a given class, as expressed in listing \ref{lst:ncc}.
+We simply calculate a mean vector for $c_{k}$ classes by summing the samples that belong te class and dividing that with the number of $N$ samples in a given class, as expressed in listing \ref{lst:ncc}.
 
 \begin{minipage}[H]{0.95\linewidth}
 	\begin{lstlisting}[caption=Implementation of NCC., label={lst:ncc}]
@@ -186,6 +186,28 @@ We make an initial k-means clustering of the training data for $k=m$ subclasses 
 			index = index+n(i)-1
 		}
 	}
+	\end{lstlisting}
+\end{minipage}
+
+\subsection{NNC}
+
+The algorithm takes as input the training and test data, as well as training labels. It then iterates through every test sample $x_i$ and compares to every single training sample $X_{i}$. It classifies $x_i$ to the class of $X_{i}$ it is closest too in Euclidean distance. Listing \ref{lst:nnc} shows this.
+
+\begin{minipage}[H]{0.95\linewidth}
+	\begin{lstlisting}[caption=Implementation of NNC., label={lst:nnc}]
+	train_nnc(trainData, trainLbls, testData) {
+		distances = zero vector by size testData*trainData
+		resultLabels = zero vector by size testData*1
+		nTestImages = num of test images
+		nTrainImages = num of train images
+		
+		for (i = 1; i <= nTestImages; i++) {
+			for (j = 1; j <= nTrainImages; j++) {
+				distances(i,j) = norm(testData(i)-trainData(j), 2)^2.
+			}			
+			trainIndex = min(distances(i))
+			resultLabels = trainLbls(trainIndex)
+		}
 	\end{lstlisting}
 \end{minipage}
 
@@ -253,9 +275,9 @@ PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l} \hline
-		Dataset & \pbox{18cm}{Method} & \pbox{5cm}{Execution time} \\ \hline
-		ORL & PCA & x \\ \hline
-		MNIST & PCA & x \\ \hline
+		Dataset & \pbox{18cm}{Method} & \pbox{5cm}{Execution time in $s$} \\ \hline
+		ORL & PCA & 0.33s \\ \hline
+		MNIST & PCA & 0.83s \\ \hline
 	\end{tabular}
 	\caption{PCA on ORL and MNIST data set.}
 	\label{table:pca}
@@ -282,20 +304,20 @@ Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
-		Dataset & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
-		ORL & x & x \\ \hline
-		ORL w. PCA & x & x \\ \hline
-		MNIST & x & x \\ \hline
-		MNIST w. PCA & x & x \\ \hline
+		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		ORL & 94,1\% & 0.00s \\ \hline
+		ORL w. PCA & 15,8\% & 0.00s \\ \hline
+		MNIST & 75,2\% & 0.34s \\ \hline
+		MNIST w. PCA & 14,9\% & 0.00s \\ \hline
 	\end{tabular}
-	\caption{Nearest centroid performed on ORL and MNIST.}
+	\caption{Results for NCC performed on ORL and MNIST.}
 	\label{table:ncc}
 \end{table}
 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_NC}}
-	\caption{Classification results of NCC on ORL.}
+	\caption{Plot results of NCC on ORL.}
 	\label{fig:orlnc}
 \end{figure}
 
@@ -303,7 +325,7 @@ Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_NC}}
-	\caption{Classification results of NCC on MNIST.}
+	\caption{Plot results of NCC on MNIST.}
 	\label{fig:mnistnc}
 \end{figure}
 
@@ -314,33 +336,50 @@ Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
-		Dataset & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
-		ORL & 2 & x & x \\ \hline
-		ORL & 3 & x & x \\ \hline
-		ORL & 5 & x & x \\ \hline
-		ORL w. PCA & 2 & x & x \\ \hline
-		MNIST & 2 & x & x \\ \hline
-		MNIST & 3 & x & x \\ \hline
-		MNIST & 5 & x & x \\ \hline
-		MNIST w. PCA & 2 & x & x \\ \hline
+		Dataset & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		ORL & 2 & 93.3 & 0.15s \\ \hline
+		ORL & 3 & 95 & 0.15s \\ \hline
+		ORL & 5 & 95.8 & 0.15s \\ \hline
+		ORL w. PCA & 2 & 9.1 & 0.13s \\ \hline
+		MNIST & 2 & 86.1 & 4.07s \\ \hline
+		MNIST & 3 & 88 & 5.99s \\ \hline
+		MNIST & 5 & 90 & 9.21s \\ \hline
+		MNIST w. PCA & 2 & 14.3 & 0.14s \\ \hline
 	\end{tabular}
-	\caption{Nearest subclass centroid performed on ORL and MNIST.}
+	\caption{Results for NSC performed on ORL and MNIST.}
 	\label{table:nsc}
 \end{table}
 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_NSC}}
-	\caption{Classification results of NSC on ORL with $N_{sc}=2$.}
+	\caption{Plot results of NSC on ORL with $N_{sc}=2$.}
 	\label{fig:orlnsc}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_NSC}}
-	\caption{Classification results of NSC on MNIST with $N_{sc}=2$.}
+	\caption{Plot results of NSC on MNIST with $N_{sc}=2$.}
 	\label{fig:mnistnsc}
 \end{figure}
+
+\subsection{NNC}
+
+Nearest Neighbor classifier was performed on ORL and MNIST. To classify a test sample, the algorithm calculates the Euclidean distance to every training sample and assigns the test to whichever training sample it is closest to. Table \ref{table:nn} shows the results with accuracy and execution times.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|} \hline
+		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		ORL & 95.8\% & 0.04s \\ \hline
+		ORL w. PCA & 11.6\% & 0.01s \\ \hline
+		MNIST & 96.9\% & 676.07s \\ \hline
+		MNIST w. PCA & 14.9\% & 264.65s \\ \hline
+	\end{tabular}
+	\caption{Results of NNC performed on ORL and MNIST.}
+	\label{table:nn}
+\end{table}
 
 \subsection{Perceptron with BP}
 
@@ -349,40 +388,47 @@ A perceptron was trained on both data sets with the learning rate $\eta$ as hype
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
-		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
-		ORL & 0.01 & x & x \\ \hline
-		ORL & 0.1 & x & x \\ \hline
-		ORL & 1 & x & x \\ \hline
-		ORL & 10 & x & x \\ \hline
-		ORL w. PCA & 0.1 & x & x \\ \hline
-		MNIST & 0.01 & x & x \\ \hline
-		MNIST & 0.1 & x & x \\ \hline
-		MNIST & 1 & x & x \\ \hline
-		MNIST & 10 & x & x \\ \hline
-		MNIST w. PCA & 0.1 & x & x \\ \hline
+		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		ORL & 0.01 & 86.6 & 1.39s \\ \hline
+		ORL & 0.1 & 84.1 & 1.30s \\ \hline
+		ORL & 1 & 82.5 & 1.36s \\ \hline
+		ORL & 10 & 84.1 & 1.34s \\ \hline
+		ORL w. PCA & 0.1 & 4.1 & 11.61s \\ \hline
+		MNIST & 0.01 & 90.4 & 1127.68s \\ \hline
+		MNIST & 0.1 & 86.6 & 1151.50s \\ \hline
+		MNIST & 1 & 86.2 & 1155.60s \\ \hline
+		MNIST & 10 & 79.3 & 1134.25s \\ \hline
+		MNIST w. PCA & 0.1 & 7.4 & 638.61s \\ \hline
 	\end{tabular}
-	\caption{Perceptron with BP performed on ORL and MNIST.}
+	\caption{Results for a perceptron with BP performed on ORL and MNIST.}
 	\label{table:perceptronbp}
 \end{table}
 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_Perceptron_BP}}
-	\caption{Classification results of training a perceptron with BP on ORL with $\eta=0.1$.}
+	\caption{Plot results of training a perceptron with BP on ORL with $\eta=0.1$.}
 	\label{fig:orlperceptronbp}
 \end{figure}
 
 \begin{figure}
 	\centering
+	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_Perceptron_BP}}
+	\caption{Plot results of training a perceptron with BP on MNIST with $\eta=1$.}
+	\label{fig:mnistperceptronbp}
+\end{figure}
+
+\begin{figure}
+	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PerceptronLine_BP_1D_PCA}}
-	\caption{Classification lines of perceptron with BP for classes on MNIST in 1D.}
+	\caption{Plot lines of perceptron with BP for classes on MNIST in 1D.}
 	\label{fig:mnistperceptronlinebp1dpca}
 \end{figure}
 
 \begin{figure}
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PerceptronLine_BP_2D_PCA}}
-	\caption{Classification lines of perceptron with BP for classes on MNIST in 2D.}
+	\caption{Plot lines of perceptron with BP for classes on MNIST in 2D.}
 	\label{fig:mnistperceptronlinebp2dpca}
 \end{figure}
 
@@ -392,45 +438,30 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 
 \begin{table}[H]
 	\centering
-	\begin{tabular}{|l|l|l|l|} \hline
-		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
-		ORL & 0.01 & x & x \\ \hline
-		ORL & 0.1 & x & x \\ \hline
-		ORL & 1 & x & x \\ \hline
-		ORL & 10 & x & x \\ \hline
-		ORL w. PCA & 0.1 & x & x\\ \hline
-		MNIST & 0.01 & x & x \\ \hline
-		MNIST & 0.1 & x & x \\ \hline
-		MNIST & 1 & x & x \\ \hline
-		MNIST & 10 & x & x \\ \hline
-		MNIST w. PCA & 0.1 & x & x \\ \hline
+	\begin{tabular}{|l|l|l|} \hline
+		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		ORL & 90\% & 0.05s \\ \hline
+		ORL w. PCA & 10\% & 0.01s \\ \hline
+		MNIST & 86\% & 6.79s \\ \hline
+		MNIST w. PCA & 18.4\% & 0.53s \\ \hline
 	\end{tabular}
-	\caption{Perceptron with BP performed on ORL and MNIST.}
+	\caption{Results for a perceptron with least-squares (MSE) performed on ORL and MNIST.}
 	\label{table:perceptronmse}
 \end{table}
 
 \begin{figure}[H]
 	\centering
 	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_Perceptron_MSE}}
-	\caption{Classification results of training a perceptron with least-squares (MSE) on ORL.}
+	\caption{Plot results of training a perceptron with least-squares (MSE) on ORL.}
 	\label{fig:orlperceptronmse}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\frame{\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_Perceptron_MSE}}}
-	\caption{Classification results of training a perceptron with least-squares (MSE) on MNIST.}
+	\caption{Plot results of training a perceptron with least-squares (MSE) on MNIST.}
 	\label{fig:mnistperceptronmse}
 \end{figure}
-
-\begin{figure}
-	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PerceptronLine_MSE_2D_PCA}}
-	\caption{Classification lines of perceptron with least-squares (MSE) for classes on MNIST in 2D.}
-	\label{fig:mnistperceptronlinemse2dpca}
-\end{figure}
-
-
 
 \section{Discussion}
 
@@ -455,8 +486,8 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 
 %% References with bibTeX database:
 
-\bibliographystyle{model1-num-names}
-\bibliography{literature.bib}
+\bibliographystyle{plainnat}
+\bibliography{literature}
 
 %% Authors are advised to submit their bibtex database files. They are
 %% requested to list a bibtex style file in the manuscript if they do
@@ -464,7 +495,7 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 
 %% References without bibTeX database:
 
-% \begin{thebibliography}{00}
+%\begin{thebibliography}{00}
 
 %% \bibitem must have the following form:
 %%   \bibitem{key}...

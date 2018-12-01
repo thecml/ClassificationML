@@ -48,7 +48,7 @@ end
 disp("ORL NC PCA accuracy:")
 accuracy = sum(resLabels==testLbls)/nTestImages
 
-%% Nearest Subclass Centroid Test - 2 subclasses (PCA)
+%% Nearest Subclass Centroid Test (PCA)
 nSubClasses = 2;
 centroids = train_nsc(pc_train, trainLbls, nClasses, nSubClasses);
 dist = zeros(nTestImages, nClasses*nSubClasses);
@@ -65,47 +65,7 @@ for i = 1:length(resLabels)
    resLabels(i) = ceil(resLabels(i)/nSubClasses);
 end
 
-disp("ORL NSC-2 PCA accuracy:")
-accuracy = sum(resLabels==testLbls)/nTestImages
-
-%% Nearest Subclass Centroid Test - 3 subclasses (PCA)
-nSubClasses = 3;
-centroids = train_nsc(pc_train, trainLbls, nClasses, nSubClasses);
-dist = zeros(nTestImages, nClasses*nSubClasses);
-resLabels = zeros(nTestImages, 1);
-for i = 1:nTestImages
-    for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
-    end
-    [~,resLabels(i)] = min(dist(i,:));
-end
-
-%convert reslabels to one class dimension.
-for i = 1:length(resLabels)
-   resLabels(i) = ceil(resLabels(i)/nSubClasses);
-end
-
-disp("ORL NSC-3 PCA accuracy:")
-accuracy = sum(resLabels==testLbls)/nTestImages
-
-%% Nearest Subclass Centroid Test PCA - 5 subclasses (PCA)
-nSubClasses = 5;
-centroids = train_nsc(pc_train, trainLbls, nClasses, nSubClasses);
-dist = zeros(nTestImages, nClasses*nSubClasses);
-resLabels = zeros(nTestImages, 1);
-for i = 1:nTestImages
-    for k = 1:nClasses*nSubClasses
-        dist(i,k) = norm(pc_test(:,i)-centroids(:,k),2)^2;
-    end
-    [~,resLabels(i)] = min(dist(i,:));
-end
-
-%convert reslabels to one class dimension.
-for i = 1:length(resLabels)
-   resLabels(i) = ceil(resLabels(i)/nSubClasses);
-end
-
-disp("ORL NSC-5 PCA accuracy:")
+disp("ORL NSC PCA accuracy:")
 accuracy = sum(resLabels==testLbls)/nTestImages
 
 %% Nearest Neighbor Test (PCA)
@@ -125,7 +85,7 @@ xlabel('N result label')
 ylabel('result label in class') 
 
 %% Perceptron Test BP (PCA)
-w = train_perceptron_backprop(pc_train, trainLbls, 1, nClasses);
+w = train_perceptron_backprop(pc_train, trainLbls, 1, nClasses, offset);
 test_tilde = [ones(1,size(pc_test,2));pc_test];
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
