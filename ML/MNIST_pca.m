@@ -152,6 +152,28 @@ resLabels = resLabels';
 disp("MNIST PCEP-BP PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
+%plot perceptron - 2D
+figure
+hold on
+scatter(test_tilde(3,:),test_tilde(2,:),[],test_labels)
+for i = 1:size(w,2)
+    plotpc(w(2:end,i)',w(1,i));
+end
+title('Perceptron line w. BP of MNIST data with PCA (2D)')
+xlabel('P(2)') 
+ylabel('P(3)')
+
+%plot perceptron - 1D
+figure
+hold on
+scatter(test_tilde(1,:),test_tilde(2,:),[],test_labels)
+for i = 1:size(w,2)
+    plotpc(w(2:end,i)',w(1,i));
+end
+title('Perceptron line w. BP of MNIST data with PCA (1D)')
+xlabel('P(1)') 
+ylabel('P(2)')
+
 %% Perceptron Test MSE (PCA)
 w = train_perceptron_mse(pc_train, train_labels, nClasses, offset);
 test_tilde = [ones(1,size(pc_test,2));pc_test];
@@ -172,4 +194,14 @@ resLabels = resLabels';
 disp("MNIST PCEP-MSE PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
+%plot perceptron - 2D
+figure
+hold on
+scatter(test_tilde(2,:),test_tilde(3,:),[],test_labels)
+for i = 1:size(w,2)
+    plotpc(w(3:end,i)',w(2,i));
+end
+title('Perceptron line w. MSE of MNIST data with PCA (2D)')
+xlabel('P(2)') 
+ylabel('P(3)')
 

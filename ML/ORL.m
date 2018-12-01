@@ -128,7 +128,7 @@ title('Plot of NN on ORL for 40 classes')
 xlabel('N result label') 
 ylabel('result label in class') 
 
-%% Percetron Test BP
+%% Perceptron Test BP
 w = train_perceptron_backprop(trainData, trainLbls, 0.1, nClasses);
 resLabels = zeros(1, nTestImages);
 test_tilde = [ones(1,size(testData,2));testData];

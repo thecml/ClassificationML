@@ -124,14 +124,60 @@ title('Plot of NN on ORL for 40 classes with PCA')
 xlabel('N result label') 
 ylabel('result label in class') 
 
+%% Perceptron Test BP (PCA)
+w = train_perceptron_backprop(pc_train, trainLbls, 1, nClasses);
+test_tilde = [ones(1,size(pc_test,2));pc_test];
+resLabels = zeros(1, nTestImages);
+for i = 1:nTestImages
+    resClass = [];
+    for k = 1:nClasses
+        %calculate decision funciton and save it
+        y = w(:,k)'*test_tilde(:,i);
+        resClass = [resClass y]; 
+    end
+    %take the result which maximizes the cost function
+    [~,resLabels(i)] = max(resClass);
+end
 
+%accuracy in %
+resLabels = resLabels';
+disp('ORL PCEP-BP accuracy:')    
+accuracy = sum(resLabels==testLbls)/nTestImages
 
+%plot perceptron
+figure
+hold on
+scatter(test_tilde(1,:),test_tilde(2,:),[],testLbls)
+for i = 1:size(w,2)
+    plotpc(w(2:end,i)',w(1,i));
+end
 
+%% Perceptron Test MSE (PCA)
+w = train_perceptron_mse(pc_train, trainLbls, nClasses, offset);
+test_tilde = [ones(1,size(pc_test,2));pc_test];
+resLabels = zeros(1, nTestImages);
+for i = 1:nTestImages
+    resClass = [];
+    for k = 1:nClasses
+        %calculate decision funciton and save it
+        y = w(:,k)'*test_tilde(:,i);
+        resClass = [resClass y]; 
+    end
+    %take the result which maximizes the cost function
+    [~,resLabels(i)] = max(resClass);
+end
 
+%accuracy in %
+resLabels = resLabels';
+disp('ORL PCEP-MSE accuracy:')    
+accuracy = sum(resLabels==testLbls)/nTestImages
 
-
-
-
-
+%plot perceptron
+figure
+hold on
+scatter(test_tilde(1,:),test_tilde(2,:),[],testLbls)
+for i = 1:size(w,2)
+    plotpc(w(2:end,i)',w(1,i));
+end
 
 

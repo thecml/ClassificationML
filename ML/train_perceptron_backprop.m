@@ -3,6 +3,7 @@ function w = train_perceptron_backprop(trainData, trainLbls, eta, nClasses)
 train_tilde = [ones(1,size(trainData,2));trainData];
 w = rand(size(trainData,1)+1, nClasses);
 nTrainImages = size(trainData,2);
+nIters = 0;
 
 %train perceptron
 for k = 1:nClasses
@@ -10,7 +11,7 @@ for k = 1:nClasses
     i = 0;
     label = 0;
     done = 0;
-    while (done == 0)
+    while (done == 0 && nIters < 1000)
         X = [];
         for i = 1:nTrainImages
             x_i = train_tilde(:,i);
@@ -35,6 +36,7 @@ for k = 1:nClasses
         w(:,k) = w(:,k) + eta * sumOfWrongs;
         wrongLabels = [];
         sumOfWrongs = [];
+        nIters = nIters+1;
         if (isempty(X))
             done = 1;
         end
