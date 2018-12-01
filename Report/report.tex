@@ -242,9 +242,138 @@ The five classification schemes are trained and tested on the ORL and MNIST data
 
 \subsection{PCA}
 
+PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ with MATLAB. Table \ref{table:pca} details the computation time for PCA and figure \ref{fig:orlpca} and \ref{fig:mnistpca} shows a scatter plot with two principal components, i.e. the eigenvectors with highest eigenvalues.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|} \hline
+		Dataset & \pbox{18cm}{Method} & \pbox{18cm}{Execution time} \\ \hline
+		ORL & PCA & x & $43.5cm$ \\ \hline
+		MNIST & PCA & x & $56cm$ \\ \hline
+	\end{tabular}
+	\caption{PCA on ORL and MNIST data set.}
+	\label{table:pca}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/ORL_PCA}
+	\caption{Plot of two PC's on ORL. Data labels are colors.}
+	\label{fig:orlpca}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_PCA}
+	\caption{Plot of two PC's on MNIST. Data labels are colors.}
+	\label{fig:mnistpca}
+\end{figure}
+
 \subsection{NCC}
 
+Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find the class $c_{k}$'s mean to which a sample $x_{i}$ is closest to by calculating the Euclidean distance (L2-norm) between a test sample and the mean vector. Table \ref{table:ncc} details performance and accuracy, while figure \ref{fig:orlnc} and \ref{fig:mnistnc} shows the resulting labels on scatter plots. The tests were performed on full-dimensional sets and PCA reduced sets. Accuracy is the number of resulting labels that equal the testing labels divided by the number of test samples.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|} \hline
+		Dataset & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
+		ORL & x & x & $43.5cm$ \\ \hline
+		ORL w. PCA & x & x & $43.5cm$ \\ \hline
+		MNIST & x & x & $56cm$ \\ \hline
+		MNIST w. PCA & x & x & $56cm$ \\ \hline
+	\end{tabular}
+	\caption{Nearest centroid performed on ORL and MNIST.}
+	\label{table:ncc}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/ORL_NC}
+	\caption{NCC on OR-L.}
+	\label{fig:orlnc}
+\end{figure}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_NC}
+	\caption{NCC on MNIST.}
+	\label{fig:mnistnc}
+\end{figure}
+
 \subsection{NSC}
+
+Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N_{sc}=2, N_{sc}=3, N_{sc}=5$ for number of subclasses. Our algorithm returns centroids for number of classes $N_{c}=N_{ck}*N_{sc}$. We classify a testing sample to a class of which its centroid it is closest to. Table \ref{table:nsc} details the results and figure X and X shows the resulting labels on plots. $N_{sc}$ is number of subclasses.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|} \hline
+		Dataset & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
+		ORL & 2 & x & x & $43.5cm$ \\ \hline
+		ORL & 3 & x & x & $43.5cm$ \\ \hline
+		ORL & 5 & x & x & $43.5cm$ \\ \hline
+		ORL w. PCA & 2 & x & x & $43.5cm$ \\ \hline
+		MNIST & 2 & x & x & $56cm$ \\ \hline
+		MNIST & 3 & x & x & $56cm$ \\ \hline
+		MNIST & 5 & x & x & $56cm$ \\ \hline
+		MNIST w. PCA 2 x & x & x & $56cm$ \\ \hline
+	\end{tabular}
+	\caption{Nearest subclass centroid performed on ORL and MNIST.}
+	\label{table:nsc}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/ORL_NSC}
+	\caption{NSC on ORL with $N_{sc}=2$.}
+	\label{fig:orlnsc}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_NSC}
+	\caption{NSC on MNIST with $N_{sc}=2$.}
+	\label{fig:mnistnsc}
+\end{figure}
+
+\subsection{Perceptron with BP}
+
+A perceptron was trained on both data sets with the learning rate $\eta$ as hyper-parameter for $\eta=0.01$, $\eta=0.1$, $\eta=1$ and $\eta=10$. For each test sample, we calculate the decision function $y = w(k)*x_{i}$ for each class $c_{k}$ and classify it to the class with maximizes the function. Table \ref{table:perceptronbp} details the results and figure X and X show plots of the resulting labels. Furthermore figure X and X show the Perceptron on the PCA reduced data set.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|} \hline
+		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy} & \pbox{18cm}{Execution time} \\ \hline
+		ORL & 0.01 & x & x & $43.5cm$ \\ \hline
+		ORL & 0.1 & x & x & $43.5cm$ \\ \hline
+		ORL & 1 & x & x & $43.5cm$ \\ \hline
+		ORL & 10 & x & x & $43.5cm$ \\ \hline
+		ORL w. PCA & 0.1 & x & x & $43.5cm$ \\ \hline
+		MNIST & 0.01 & x & x & $56cm$ \\ \hline
+		MNIST & 0.1 & x & x & $56cm$ \\ \hline
+		MNIST & 1 & x & x & $56cm$ \\ \hline
+		MNIST & 10 & x & x & $56cm$ \\ \hline
+		MNIST w. PCA & 0.1 & x & x & $56cm$ \\ \hline
+	\end{tabular}
+	\caption{Perceptron with BP performed on ORL and MNIST.}
+	\label{table:perceptronbp}
+\end{table}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\linewidth]{../ML/results/ORL_Perceptron_BP}
+	\caption{Perceptron with BP on ORL with $\eta=0.1$.}
+	\label{fig:orlperceptronbp}
+\end{figure}
+
+\subsection{Perceptron with MSE}
+
+A perceptron was trained on both data sets. Like with backpropagation, we find the class that maximize the decision function $y = w(k)*x_{i}$ for each sample and classify it to that class.
+
+
+
+
+
 
 
 

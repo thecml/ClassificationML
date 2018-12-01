@@ -129,10 +129,11 @@ accuracy = sum(resLabels==test_labels)/nTestImages
 resLabels = train_nn(pc_train, train_labels, pc_test);
 
 %accuracy in %
+disp("MNIST NN PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %% Perceptron Test BP (PCA)
-w = train_perceptron_backprop(pc_train, train_labels, 0.01, nClasses);
+w = train_perceptron_backprop(pc_train, train_labels, 0.1, nClasses);
 test_tilde = [ones(1,size(pc_test,2));pc_test];
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
@@ -152,7 +153,7 @@ disp("MNIST PCEP-BP PCA accuracy:")
 accuracy = sum(resLabels==test_labels)/nTestImages
 
 %% Perceptron Test MSE (PCA)
-w = train_perceptron_mse(pc_train, train_labels, nClasses);
+w = train_perceptron_mse(pc_train, train_labels, nClasses, offset);
 test_tilde = [ones(1,size(pc_test,2));pc_test];
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages

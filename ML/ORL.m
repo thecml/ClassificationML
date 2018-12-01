@@ -128,44 +128,10 @@ title('Plot of NN on ORL for 40 classes')
 xlabel('N result label') 
 ylabel('result label in class') 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%perceptron TEST MSE
-w = train_perceptron_mse(trainData, trainLbls, nClasses, offset);
+%% Percetron Test BP
+w = train_perceptron_backprop(trainData, trainLbls, 0.1, nClasses);
 resLabels = zeros(1, nTestImages);
-for i = 1:nTestImages
-    resClass = [];
-    for k = 1:nClasses
-        %calculate decision funciton and save it
-        y = w(:,k)'*test_tilde(:,i);
-        resClass = [resClass y]; 
-    end
-    %take the result which maximizes the cost function
-    [~,resLabels(i)] = max(resClass);
-end
-resLabels = resLabels';
-
-
-
-
-%Percetron TEST BP
-resLabels = zeros(1, nTestImages);
+test_tilde = [ones(1,size(testData,2));testData];
 for i = 1:nTestImages
     resClass = [];
     for k = 1:nClasses
@@ -179,20 +145,44 @@ end
 
 %accuracy in %
 resLabels = resLabels';
+
+disp('ORL PCEP-BP accuracy:')    
 accuracy = sum(resLabels==testLbls)/nTestImages
 
 %plot result labels
+figure
+hold on
 scatter(1:length(resLabels),resLabels)
+title('Plot of Perceptron with BP on ORL for 40 classes, ETA=0.1')
+xlabel('N result label') 
+ylabel('result label in class') 
 
+%% Perceptron Test MSE
+w = train_perceptron_mse(trainData, trainLbls, nClasses, offset);
+test_tilde = [ones(1,size(testData,2));testData];
+resLabels = zeros(1, nTestImages);
+for i = 1:nTestImages
+    resClass = [];
+    for k = 1:nClasses
+        %calculate decision funciton and save it
+        y = w(:,k)'*test_tilde(:,i);
+        resClass = [resClass y]; 
+    end
+    %take the result which maximizes the cost function
+    [~,resLabels(i)] = max(resClass);
+end
 
+resLabels = resLabels';
 
+disp('ORL PCEP-MSE accuracy:')    
+accuracy = sum(resLabels==testLbls)/nTestImages
 
-
-
-
-
-
-
-
+%plot result labels
+figure
+hold on
+scatter(1:length(resLabels),resLabels)
+title('Plot of Perceptron with MSE on ORL for 40 classes')
+xlabel('N result label') 
+ylabel('result label in class') 
 
 

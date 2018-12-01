@@ -142,7 +142,7 @@ xlabel('N result label')
 ylabel('result label in class') 
 
 %% Perceptron Test BP
-w = train_perceptron_backprop(train_images, train_labels, 0.01, nClasses);
+w = train_perceptron_backprop(train_images, train_labels, 0.1, nClasses);
 test_tilde = [ones(1,size(test_images,2));test_images];
 resLabels = zeros(1, nTestImages);
 for i = 1:nTestImages
@@ -159,13 +159,13 @@ end
 %accuracy in %
 resLabels = resLabels';
 disp('MNIST PCEP-BP accuracy:')
-accuracy = sum(resLabels==testLbls)/nTestImages
+accuracy = sum(resLabels==test_labels)/nTestImages
 
 %plot result labels
 figure
 hold on
 scatter(1:length(resLabels),resLabels)
-title('Plot of Perceptron with BP on MNIST for 10 classes')
+title('Plot of Perceptron with BP on MNIST for 10 classes, ETA=0.1')
 xlabel('N result label') 
 ylabel('result label in class') 
 
