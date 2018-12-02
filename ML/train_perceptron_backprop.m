@@ -17,7 +17,7 @@ for k = offset:nClasses-limit
     label = 0;
     done = 0;
     nIters = 0;
-    while (done == 0 && nIters < 1000)
+    while (done == 0 && nIters < 100)
         X = [];
         for i = 1:nTrainImages
             x_i = train_tilde(:,i);

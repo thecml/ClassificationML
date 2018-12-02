@@ -15,6 +15,8 @@
 \usepackage{booktabs} % Horizontal rules in tables
 \usepackage{microtype} % Slightly tweak font spacing for aesthetics
 \usepackage[english]{babel} % Language hyphenation and typographical rules
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
 
 \lstset{ %
 	language=C,                % choose the language of the code
@@ -130,29 +132,26 @@ If W is square and nonsingular, the pseudo-inverse is simply the regular inverse
 
 \section{Implementation}
 
-The implementation uses MATLAB to design and run the different schemes on the training data and evaluating on the test data. For understanding purposes, this section will briefly lay out the algorithms described in theory as pseudo-code how we implemented them.
+The implementation uses MATLAB to design and run the different schemes on the training and test data. For understanding purposes, this section will briefly lay out the algorithms described in theory as pseudo-code.
 
 \subsection{PCA} 
 
 The algorithm centers the data, then simply calculates eigenvectors from the variance matrix, sort them after highest eigenvalue and uses the $n$ vector as principal components in representing the data. Listing \ref{lst:pca} shows this.
 
-\begin{minipage}[t]{0.95\linewidth}
-	\begin{lstlisting}[caption=Implementation of PCA., label={lst:pca}]
+\begin{lstlisting}[caption=Implementation of PCA., label={lst:pca}, belowskip=-0.8 \baselineskip]
 	pca_reduce(trainData, nDimensions) {
 		trainData = trainData - mean(trainData) for rows in trainData
 		eigVectors, eigValues = eig(cov(trainData))
 		eigVectors = sort(eigVectors, 'descending')
 		pc = eigVectors(from 1 to nDimensions)*trainData
 	}
-	\end{lstlisting}
-\end{minipage}
+\end{lstlisting}
 
 \subsection{NCC} 
 
 We simply calculate a mean vector for $c_{k}$ classes by summing the samples that belong te class and dividing that with the number of $N$ samples in a given class, as expressed in listing \ref{lst:ncc}.
 
-\begin{minipage}[H]{0.95\linewidth}
-	\begin{lstlisting}[caption=Implementation of NCC., label={lst:ncc}]
+\begin{lstlisting}[caption=Implementation of NCC., label={lst:ncc}]
 	train_ncc(trainData, trainLbls, nClasses) {
 		mu = zero vector by size of trainData*nClasses
 		n = zero vector by size of 1*nClasses
@@ -164,15 +163,13 @@ We simply calculate a mean vector for $c_{k}$ classes by summing the samples tha
 			index = index+n(i)
 		}
 	}
-	\end{lstlisting}
-\end{minipage}
+\end{lstlisting}
 
 \subsection{NSC} 
 
 We make an initial k-means clustering of the training data for $k=m$ subclasses as hyper parameter and use the resulting centroids to construct a new centroid matrix for each subclass $m$ spanning $c_{k}$*$m$. Listing \ref{lst:nsc} shows this.
 
-\begin{minipage}[H]{0.95\linewidth}
-	\begin{lstlisting}[caption=Implementation of NSC., label={lst:nsc}]
+\begin{lstlisting}[caption=Implementation of NSC., label={lst:nsc}]
 	train_nsc(trainData, trainLbls, nClasses, nSubClasses) {
 		centroids = zero vector by size of trainData*(nClasses*nSubClasses)
 		n = zero vector by size of 1*nClasses
@@ -184,10 +181,8 @@ We make an initial k-means clustering of the training data for $k=m$ subclasses 
 			[idx,clst] = kmeans(trainData for index+n(i), nSubClasses)
 			centroids(for idx in centroidIdx) = clst
 			index = index+n(i)-1
-		}
-	}
-	\end{lstlisting}
-\end{minipage}
+		} }
+\end{lstlisting}
 
 \subsection{NNC}
 
@@ -219,11 +214,11 @@ The algorithm trains a perceptron to correctly classify each sample $x_{i}$ to c
 	\begin{lstlisting}[caption=Implementation of NSC., label={lst:pbp}]
 	train_perp_bp(trainData, trainLbls, eta, nClasses) {
 	w = random W matrix with size trainData*nCLasses
-	
+	maxIters = max itertions
 	for (k = 1; k <= nClasses; k++) {
 		wrongLabels = empty matrix to save labels
 		done = false, i = 0
-		while (not done) {
+		while (not done and nIters < maxIters) {
 			X = empty matrix for wrong x_i's
 			for (i = 1; i <= nTrainImages, i++) {
 				x_i = trainData(i)
@@ -276,8 +271,8 @@ PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ 
 	\centering
 	\begin{tabular}{|l|l|l|l} \hline
 		Dataset & \pbox{18cm}{Method} & \pbox{5cm}{Execution time in $s$} \\ \hline
-		ORL & PCA & 0.33s \\ \hline
-		MNIST & PCA & 0.83s \\ \hline
+		ORL & PCA & 0.33 \\ \hline
+		MNIST & PCA & 0.83 \\ \hline
 	\end{tabular}
 	\caption{PCA on ORL and MNIST data set.}
 	\label{table:pca}
@@ -285,14 +280,14 @@ PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ 
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_PCA}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/ORL_PCA}}
 	\caption{Plot of two PC's on ORL. Data labels are colors.}
 	\label{fig:orlpca}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PCA}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_PCA}}
 	\caption{Plot of two PC's on MNIST. Data labels are colors.}
 	\label{fig:mnistpca}
 \end{figure}
@@ -305,10 +300,10 @@ Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find 
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
 		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
-		ORL & 94,1\% & 0.00s \\ \hline
-		ORL w. PCA & 15,8\% & 0.00s \\ \hline
-		MNIST & 75,2\% & 0.34s \\ \hline
-		MNIST w. PCA & 14,9\% & 0.00s \\ \hline
+		ORL & 94,1\% & 0.00 \\ \hline
+		ORL w. PCA & 15,8\% & 0.00 \\ \hline
+		MNIST & 75,2\% & 0.34 \\ \hline
+		MNIST w. PCA & 14,9\% & 0.00 \\ \hline
 	\end{tabular}
 	\caption{Results for NCC performed on ORL and MNIST.}
 	\label{table:ncc}
@@ -337,14 +332,14 @@ Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
 		Dataset & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
-		ORL & 2 & 93.3 & 0.15s \\ \hline
-		ORL & 3 & 95 & 0.15s \\ \hline
-		ORL & 5 & 95.8 & 0.15s \\ \hline
-		ORL w. PCA & 2 & 9.1 & 0.13s \\ \hline
-		MNIST & 2 & 86.1 & 4.07s \\ \hline
-		MNIST & 3 & 88 & 5.99s \\ \hline
-		MNIST & 5 & 90 & 9.21s \\ \hline
-		MNIST w. PCA & 2 & 14.3 & 0.14s \\ \hline
+		ORL & 2 & 93.3 & 0.15 \\ \hline
+		ORL & 3 & 95 & 0.15 \\ \hline
+		ORL & 5 & 95.8 & 0.15 \\ \hline
+		ORL w. PCA & 2 & 9.1 & 0.13 \\ \hline
+		MNIST & 2 & 86.1 & 4.07 \\ \hline
+		MNIST & 3 & 88 & 5.99 \\ \hline
+		MNIST & 5 & 90 & 9.21 \\ \hline
+		MNIST w. PCA & 2 & 14.3 & 0.14 \\ \hline
 	\end{tabular}
 	\caption{Results for NSC performed on ORL and MNIST.}
 	\label{table:nsc}
@@ -352,53 +347,72 @@ Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_NSC}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/ORL_NSC}}
 	\caption{Plot results of NSC on ORL with $N_{sc}=2$.}
 	\label{fig:orlnsc}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_NSC}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_NSC}}
 	\caption{Plot results of NSC on MNIST with $N_{sc}=2$.}
 	\label{fig:mnistnsc}
 \end{figure}
 
 \subsection{NNC}
 
-Nearest Neighbor classifier was performed on ORL and MNIST. To classify a test sample, the algorithm calculates the Euclidean distance to every training sample and assigns the test to whichever training sample it is closest to. Table \ref{table:nn} shows the results with accuracy and execution times.
+Nearest Neighbor classifier was performed on ORL and MNIST. To classify a test sample, the algorithm calculates the Euclidean distance to every training sample and assigns the test to whichever training sample it is closest to. Table \ref{table:nn} shows the results with accuracy and execution times. Table \ref{table:nnconfusion} is a confusion matrix to visualize the classification result. It shows samples known to be in class $c_{k}$ classified correctly to $c_{k}$, i.e. 973 samples were rightly classified to class 1.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
 		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
-		ORL & 95.8\% & 0.04s \\ \hline
-		ORL w. PCA & 11.6\% & 0.01s \\ \hline
-		MNIST & 96.9\% & 676.07s \\ \hline
-		MNIST w. PCA & 14.9\% & 264.65s \\ \hline
+		ORL & 95.8\% & 0.04 \\ \hline
+		ORL w. PCA & 11.6\% & 0.01 \\ \hline
+		MNIST & 96.9\% & 676.07 \\ \hline
+		MNIST w. PCA & 14.9\% & 264.65 \\ \hline
 	\end{tabular}
 	\caption{Results of NNC performed on ORL and MNIST.}
 	\label{table:nn}
 \end{table}
 
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|} \hline
+		{\ul }      & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} & \textbf{9} & \textbf{10} \\ \hline
+		\textbf{1}  & 973        & 1          & 1          & 0          & 0          & 1          & 3          & 1          & 0          & 0           \\
+		\textbf{2}  & 0          & 1129       & 3          & 0          & 1          & 1          & 1          & 0          & 0          & 0           \\
+		\textbf{3}  & 7          & 6          & 992        & 5          & 1          & 0          & 2          & 16         & 3          & 0           \\
+		\textbf{4}  & 0          & 1          & 2          & 970        & 1          & 19         & 0          & 7          & 7          & 3           \\
+		\textbf{5}  & 0          & 7          & 0          & 0          & 944        & 0          & 3          & 5          & 1          & 22          \\
+		\textbf{6}  & 1          & 1          & 0          & 12         & 2          & 860        & 5          & 1          & 6          & 4           \\
+		\textbf{7}  & 4          & 2          & 0          & 0          & 3          & 5          & 944        & 0          & 0          & 0           \\
+		\textbf{8}  & 0          & 14         & 6          & 2          & 4          & 0          & 0          & 992        & 0          & 10          \\
+		\textbf{9}  & 6          & 1          & 3          & 14         & 5          & 13         & 5          & 4          & 920        & 5           \\
+		\textbf{10} & 2          & 5          & 1          & 6          & 10         & 5          & 1          & 11         & 1          & 967 \\ \hline   
+	\end{tabular}
+	\caption{Confusion matrix for NNC performed on MNIST.}
+	\label{table:nnconfusion}
+\end{table}
+
 \subsection{Perceptron with BP}
 
-A perceptron was trained on both data sets with the learning rate $\eta$ as hyper-parameter for $\eta=0.01$, $\eta=0.1$, $\eta=1$ and $\eta=10$. For each test sample, we calculate the decision function $y = w(k)*x_{i}$ for each class $c_{k}$ and classify it to the class with maximizes the function. Table \ref{table:perceptronbp} details the results, figure X and X show plots of the resulting labels and \ref{fig:mnistperceptronlinebp1dpca} and \ref{fig:mnistperceptronlinebp2dpca} show the perceptron line in 1D and 2D with PCA.
+A perceptron was trained on both data sets with the learning rate $\eta$ as hyper-parameter for $\eta=0.01$, $\eta=0.1$, $\eta=1$ and $\eta=10$. For each test sample, we calculate the decision function $y = w(k)*x_{i}$ for each class $c_{k}$ and classify it to the class with maximizes the function. A maximum number of iterations per class is set to 100. Table \ref{table:perceptronbp} details the results, figure X and X show plots of the resulting labels and \ref{fig:mnistperceptronlinebp1dpca} and \ref{fig:mnistperceptronlinebp2dpca} show the perceptron line in 1D and 2D with PCA.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
 		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
-		ORL & 0.01 & 86.6 & 1.39s \\ \hline
-		ORL & 0.1 & 84.1 & 1.30s \\ \hline
-		ORL & 1 & 82.5 & 1.36s \\ \hline
-		ORL & 10 & 84.1 & 1.34s \\ \hline
-		ORL w. PCA & 0.1 & 4.1 & 11.61s \\ \hline
-		MNIST & 0.01 & 90.4 & 1127.68s \\ \hline
-		MNIST & 0.1 & 86.6 & 1151.50s \\ \hline
-		MNIST & 1 & 86.2 & 1155.60s \\ \hline
-		MNIST & 10 & 79.3 & 1134.25s \\ \hline
-		MNIST w. PCA & 0.1 & 7.4 & 638.61s \\ \hline
+		ORL & 0.01 & 86.6 & 1.39 \\ \hline
+		ORL & 0.1 & 84.1 & 1.30 \\ \hline
+		ORL & 1 & 82.5 & 1.36 \\ \hline
+		ORL & 10 & 84.1 & 1.34 \\ \hline
+		ORL w. PCA & 0.1 & 4.1 & 1.13 \\ \hline
+		MNIST & 0.01 & 87.3 & 131.39 \\ \hline
+		MNIST & 0.1 & 86.6 & 115.50 \\ \hline
+		MNIST & 1 & 86.2 & 115.60 \\ \hline
+		MNIST & 10 & 79.3 & 113.25 \\ \hline
+		MNIST w. PCA & 0.1 & 7.4 & 1.16 \\ \hline
 	\end{tabular}
 	\caption{Results for a perceptron with BP performed on ORL and MNIST.}
 	\label{table:perceptronbp}
@@ -406,28 +420,28 @@ A perceptron was trained on both data sets with the learning rate $\eta$ as hype
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_Perceptron_BP}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/ORL_Perceptron_BP}}
 	\caption{Plot results of training a perceptron with BP on ORL with $\eta=0.1$.}
 	\label{fig:orlperceptronbp}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_Perceptron_BP}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_Perceptron_BP}}
 	\caption{Plot results of training a perceptron with BP on MNIST with $\eta=1$.}
 	\label{fig:mnistperceptronbp}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PerceptronLine_BP_1D_PCA}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_PerceptronLine_BP_1D_PCA}}
 	\caption{Plot lines of perceptron with BP for classes on MNIST in 1D.}
 	\label{fig:mnistperceptronlinebp1dpca}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_PerceptronLine_BP_2D_PCA}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_PerceptronLine_BP_2D_PCA}}
 	\caption{Plot lines of perceptron with BP for classes on MNIST in 2D.}
 	\label{fig:mnistperceptronlinebp2dpca}
 \end{figure}
@@ -440,10 +454,10 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
 		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
-		ORL & 90\% & 0.05s \\ \hline
-		ORL w. PCA & 10\% & 0.01s \\ \hline
-		MNIST & 86\% & 6.79s \\ \hline
-		MNIST w. PCA & 18.4\% & 0.53s \\ \hline
+		ORL & 90\% & 0.05 \\ \hline
+		ORL w. PCA & 10\% & 0.01 \\ \hline
+		MNIST & 86\% & 6.79 \\ \hline
+		MNIST w. PCA & 18.4\% & 0.53 \\ \hline
 	\end{tabular}
 	\caption{Results for a perceptron with least-squares (MSE) performed on ORL and MNIST.}
 	\label{table:perceptronmse}
@@ -451,20 +465,25 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_Perceptron_MSE}}
+	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/ORL_Perceptron_MSE}}
 	\caption{Plot results of training a perceptron with least-squares (MSE) on ORL.}
 	\label{fig:orlperceptronmse}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\frame{\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_Perceptron_MSE}}}
+	\frame{\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_Perceptron_MSE}}}
 	\caption{Plot results of training a perceptron with least-squares (MSE) on MNIST.}
 	\label{fig:mnistperceptronmse}
 \end{figure}
 
 \section{Discussion}
 
+As expected, the algorithms performed differently given the complexity and dimensionality of the data set. If a classification scheme is fast and accurate on a small data set, like ORL ($D=1200$), it might not replicate on a larger set like MNIST ($D=60000$). PCA showed a computational easy way to reduce dimensionality, but accuracy with PCA data lacked in all our tests, averaging around 15\%, even though the execution times were similar to that of the full dimensional sets. Nearest Centroid Classifier (NSC) gained an impressive accuracy on ORL (94.1\%), but struggled on MNIST (75.2\%). Nearest Subclass Centroid (NSC) proved high classification precision, with a 2\% difference between 2 and 5 sublclasses on ORL, and 3.9\% on MNIST, however execution times doubled on MNIST with 5 subclasses compared to just 2. Nearest Neighbor (NNC) gave us the best results in terms of accuracy (95.8\% and 96.9\%), but suffered from very high execution times. Our perceptron with BP showed that a lower learning rate $\eta < 0.01$ gave better accuracy with similar execution times as tests with higher learning rate $\eta > 1$. The perceptron performed faster than nearest neighbor (around 2 and 11 minutes on MNIST, respectively) with similar accuracy, showing that a perceptron should be preferred over NNC on larger data sets. The one using least-squares (MSE) gave a sound accuracy on both sets, lower execution times and is a much more simple algorithm to implement and comprehend, though solving the generalized inverse often requires plenty computational resources.
+
+\section{Conclusion}
+
+In this report we have explained the workings of five popular classification algorithms, the mathematics behind them and benchmarked them on two famous data sets, the ORL set containing 40 different types of facial images and the MNIST set featuring images of numbers from zero to nine. We found that simple algorithms like nearest neighbor classifier (NNC) performs excellent on simple data sets with low dimensionality (like ORL), but struggles on more complex sets like MNIST. In such case, we found that a perceptron trained either by backpropagation or MSE is more suited because it is computational more cost effective, given a boundary is set on number of convergence attempts. Similar results are echoed in \cite{Roy2005}.
 
 %\end{frontmatter}
 
