@@ -27,7 +27,7 @@
 	backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
 	showspaces=false,               % show spaces adding particular underscores
 	showstringspaces=false,         % underline spaces within strings
-	showtabs=false,                 % show tabs within strings adding particular underscores
+	showtabs=false,                 % sh-ow tabs within strings adding particular underscores
 	frame=single,           % adds a frame around the code
 	tabsize=2,          % sets default tabsize to 2 spaces
 	captionpos=b,           % sets the caption-position to bottom
@@ -40,15 +40,15 @@
 
 \begin{document}
 	
-\title{Comparing five common classification algorithms on facial and numeral images}
+\title{Comparing five common classification algorithms on the ORL and MNIST data set}
 
 %% use optional labels to link authors explicitly to addresses:
 %% \author[label1,label2]{<author name>}
 %% \address[label1]{<address>}
 %% \address[label2]{<address>}
 
-\author{Christian~M.~Lillelund,~\IEEEmembership{201408354@post.au.dk,~School of Engineering, Aarhus University}% <-this % stops a space
-\thanks{Manuscript received April 19, 2005; revised August 26, 2015.}}
+\author{Christian~M.~Lillelund,~\IEEEmembership{201408354@post.au.dk,~School of Engineering, Aarhus University}
+\thanks{Report revised December 10, 2018.}}
 \maketitle
 
 %\address{School of Engineering, Aarhus University}
@@ -56,7 +56,7 @@
 %\address{X}
 
 \begin{abstract}
-X
+Today's computer systems offer a significant potential for training and testing machine learning techniques and classification algorithms, however the choice of algorithm depend on the problem at hand, one's amount of train and test data and the computational resources at one's disposal. In this report we review one dimensionality reduction technique and five common classification schemes and evaluate their performance on the ORL (human faces) and MNIST (hand-written numbers) data set. We find that simple algorithms like the Nearest Neighbor classifier work great performance and accuracy wise when training on the small data set, ORL, but struggle to keep up with more complex algorithms like a Perceptron using backpropagation on the large set, MNIST, as the dimensionality and amount of samples is significantly increased.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -64,9 +64,9 @@ X
 \end{IEEEkeywords}
 
 \section{Introduction}
-For humans, it doesn't take much effort to tell the difference between a picture of a dog or a cat. A natural number or a letter. A happy person or a sad person. For computers, these sort of problems are notorious hard to solve and often require many computational resources. Machine learning and computer vision deals with these issues as they encompass a range of algorithms and classification techniques to produce a model or scheme that can tell images apart and recognize similarities. In this report we study the recognition and classification of a data set containing human faces and one featuring hand-written numbers by implementing and testing five commonly used techniques (Nearest class centroid classifier, nearest sub-class centroid, nearest neighbor and two perceptron variants) using MATLAB. We split the data in a training and a test set, then train our respective model or classifier and evaluate their ability to classify correctly on the testing set. A version using all the dimensions of the data and a principal component version will be applied. We use some visualization techniques to better communicate the data representation and tables to compare them. We start by going over the basic theory behind the classification schemes, then look at the data, briefly go over implementation details and then turn to results. At the end we review and argue which scheme would make the most sense to use with these two classification problems.
+For humans, it does not take much effort to tell the difference between a picture of a dog or a cat. A natural number or a letter. A happy person or a sad person. For computers, these sort of problems are notorious hard to solve and often require many computational resources\footnote{\cite{TerenceMills2018}}. Machine learning and computer vision deals with these issues as they encompass a range of algorithms and classification techniques to produce a model or scheme that can tell images apart and recognize similarities. In this report we study the recognition and classification of a data set containing human faces and one featuring hand-written numbers by implementing and testing five commonly used techniques (Nearest class centroid classifier, nearest sub-class centroid, nearest neighbor and two perceptron variants) using MATLAB. We split the data in a training and a test set, then train our respective classifier and evaluate its ability to classify correctly on the testing set. A version using all the dimensions of the training data samples and a principal component version will be applied. We use some MATLAB visualization techniques to better communicate the data representation and tables to compare them. We start by going over the basic theory behind the classification schemes, then look at the data, briefly go over implementation details and then turn to results. At the end we review and argue which scheme would make the most sense to use with these two classification problems.
 
-Initially, we split the ORL image data set, containing 400 40x30 pixel faces of 40 different persons, and the MNIST set containing 70.000 28x28 pixel hand-written numbers 0-9. The data is vectorized, so we use built-in MATLAB functions to construct the original pictures as such:
+Initially, we split the ORL image data set, containing 400 40x30 pixel faces of 40 different persons, and the MNIST set containing 70.000 28x28 pixel hand-written numbers from zero to nine. The data is vectorized, so we use built-in MATLAB functions to construct the original pictures as such:
 
 \begin{figure}[h]
 	\centering
@@ -82,9 +82,8 @@ Initially, we split the ORL image data set, containing 400 40x30 pixel faces of 
 	\label{fig:mnistnumbers}
 \end{figure}
 
-
 \section{Theory}
-This section will explain fundamental theory behind the dimensional reduction technique (PCA) and five schemes used in this report.
+This section will explain fundamental theory behind the dimensional reduction technique (PCA) and the five schemes used in this report.
 
 \subsection{Principal Component Analysis}
 
@@ -94,7 +93,7 @@ PCA is a procedure that transform a set of observations or samples in dimension 
 
 The NCC classifier assigns labels $l_{i}$ to $N$ observations determined by which class $c_{k}$'s mean (centroid) the observation $x_{i}$ is closest to. We make the assumption that each class follow a normal distribution, as they are given equal importance in the classification algorithm. The mean class vector is given by \footnote{\cite{Iosifidis2017}}: $$ \mu_{k} = \frac{1}{N_{k}} \sum_{i,li=k}^{} x_{i}, k = 1, ... K.$$
 
-To classify any observation $x_{i}$ we find the smallest distance to any mean vector and assign the label of that vector to it, more formally: $$ d(x_{i},\mu_{k}) = ||x_{i}-\mu_{k}||^2_{2} $$
+To classify any observation $x_{i}$ we find the smallest distance to any mean vector and assign the label of that vector to $x_{i}$, more formally: $$ d(x_{i},\mu_{k}) = ||x_{i}-\mu_{k}||^2_{2} $$
 
 \subsection{Nearest subclass centroid classifier}
 
@@ -136,7 +135,7 @@ The implementation uses MATLAB to design and run the different schemes on the tr
 
 \subsection{PCA} 
 
-The algorithm centers the data, then simply calculates eigenvectors from the variance matrix, sort them after highest eigenvalue and uses the $n$ vector as principal components in representing the data. Listing \ref{lst:pca} shows this.
+The algorithm centers the data, then simply calculates eigenvectors from the variance matrix, sort them after highest eigenvalue and uses the $n$ vector as a principal component in representing the data. Listing \ref{lst:pca} shows the PCA as pseudo-code.
 
 \begin{lstlisting}[caption=Implementation of PCA., label={lst:pca}, belowskip=-0.8 \baselineskip]
 	pca_reduce(trainData, nDimensions) {
@@ -149,7 +148,7 @@ The algorithm centers the data, then simply calculates eigenvectors from the var
 
 \subsection{NCC} 
 
-We simply calculate a mean vector for $c_{k}$ classes by summing the samples that belong te class and dividing that with the number of $N$ samples in a given class, as expressed in listing \ref{lst:ncc}.
+NCC simply calculates a mean vector for $c_{k}$ classes by summing the samples that belong to the class and dividing that with the number of $N$ samples in a given class, as expressed in listing \ref{lst:ncc}.
 
 \begin{lstlisting}[caption=Implementation of NCC., label={lst:ncc}]
 	train_ncc(trainData, trainLbls, nClasses) {
@@ -167,7 +166,7 @@ We simply calculate a mean vector for $c_{k}$ classes by summing the samples tha
 
 \subsection{NSC} 
 
-We make an initial k-means clustering of the training data for $k=m$ subclasses as hyper parameter and use the resulting centroids to construct a new centroid matrix for each subclass $m$ spanning $c_{k}$*$m$. Listing \ref{lst:nsc} shows this.
+NSC makes an initial k-means clustering of the training data for $k=m$ subclasses as hyper parameter and use the resulting centroids to construct a new centroid matrix for each subclass $m$ spanning $c_{k}$*$m$. Listing \ref{lst:nsc} shows this.
 
 \begin{lstlisting}[caption=Implementation of NSC., label={lst:nsc}]
 	train_nsc(trainData, trainLbls, nClasses, nSubClasses) {
@@ -208,10 +207,9 @@ The algorithm takes as input the training and test data, as well as training lab
 
 \subsection{Perceptron with backpropagation} 
 
-The algorithm trains a perceptron to correctly classify each sample $x_{i}$ to class $c_{k}$. We start with an empty vector $\chi$, then create a label $l_{i}$ for sample $x_{i}$ setting it to 1 if it corresponds to our current class, otherwise -1. We then use a one-vs-rest criterion function $f(w,x)$ for the $x_{i}$'s, save the wrongly classified samples and labels, then summing the wrong samples times their label and use this value to update weights $w_{k}$ iteratively. The learning eta $\eta$ is a hyper parameter. Listing \ref{lst:pbp} is the pseudo-code for this.
+The algorithm trains a perceptron to correctly classify each sample $x_{i}$ to class $c_{k}$. We start with an empty vector $\chi$, then create a label $l_{i}$ for sample $x_{i}$ setting it to 1 if it corresponds to our current class, otherwise -1. We then use a one-vs-rest criterion function $f(w,x)$ for the $x_{i}$'s, save the wrongly classified samples and labels, then summing the wrong samples times their label and use this value to update weights $w_{k}$ iteratively. The learning eta $\eta$ is a hyper parameter. Listing \ref{lst:pbp} shows the pseudo-code for this.
 
-\begin{minipage}[H]{0.95\linewidth}
-	\begin{lstlisting}[caption=Implementation of NSC., label={lst:pbp}]
+\begin{lstlisting}[caption=Implementation of a perceptron with backprogapation., label={lst:pbp}]
 	train_perp_bp(trainData, trainLbls, eta, nClasses) {
 	w = random W matrix with size trainData*nCLasses
 	maxIters = max itertions
@@ -233,15 +231,13 @@ The algorithm trains a perceptron to correctly classify each sample $x_{i}$ to c
 			}
 		}
 	}
-	\end{lstlisting}
-\end{minipage}
+\end{lstlisting}
 
 \subsection{Perceptron with MSE} 
 
 The algorithm for MSE is simplified, but possibly more computational demanding. We start by finding the pseudo-inverse of our training data set, then create a label vector for each class $c_{k}$ with $l_{i} = 1$ if the label is in the class or $l_{i} = -1$ if it is not. Finally we find the MSE solution by multiplying the two for weight $W_{k}$. Listing \ref{lst:pmse} shows this.
 
-\begin{minipage}[H]{0.95\linewidth}
-	\begin{lstlisting}[caption=Implementation of NSC., label={lst:pmse}]
+\begin{lstlisting}[caption=Implementation of NSC., label={lst:pmse}]
 	train_perp_mse(trainData, trainLbls, nClasses) {
 		w = random W matrix with size trainData*nCLasses
 		X = pseudo-inverse of trainData
@@ -256,12 +252,11 @@ The algorithm for MSE is simplified, but possibly more computational demanding. 
 			w(:,k) = X*Labels;
 		}
 	}
-	\end{lstlisting}
-\end{minipage}
+\end{lstlisting}
 
 \section{Results}
 
-The five classification schemes are trained and tested on the ORL and MNIST data set with scatter plots to visualize the resulting labels compared to the testing ones and a confusion matrix that depicts the predicated and true class. Each algorithm is tested with both the PCA and the full version of the data. All results were done with MATLAB R2018a on an Intel i5 4690K @ 3.50Ghz CPU. We start by showing the output of the PCA analysis, and then proceed to the classifications.
+The five classification schemes are trained and tested on the ORL and MNIST data set with scatter plots to visualize the resulting labels compared to the testing ones and a confusion matrix that depicts the predicated and true classes. Each algorithm is tested with both the PCA and the full version of the data. All results were done with MATLAB R2018a on an Intel i5 4690K @ 3.50Ghz CPU. We start by showing the output of the PCA analysis, and then proceed to the classifications.
 
 \subsection{PCA}
 
@@ -270,7 +265,7 @@ PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l} \hline
-		Dataset & \pbox{18cm}{Method} & \pbox{5cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{Method} & \pbox{5cm}{Execution time in $s$} \\ \hline
 		ORL & PCA & 0.33 \\ \hline
 		MNIST & PCA & 0.83 \\ \hline
 	\end{tabular}
@@ -294,12 +289,12 @@ PCA was performed on both ORL and MNIST data set for number of dimensions $D=2$ 
 
 \subsection{NCC}
 
-Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find the class $c_{k}$'s mean to which a sample $x_{i}$ is closest to by calculating the Euclidean distance (L2-norm) between a test sample and the mean vector. Table \ref{table:ncc} details performance and accuracy, while figure \ref{fig:orlnc} and \ref{fig:mnistnc} shows the resulting labels on scatter plots. The tests were performed on full-dimensional sets and PCA reduced sets. Accuracy is the number of resulting labels that equal the testing labels divided by the number of test samples.
+Nearest Centroid was conducted on ORL and MNIST. To test the algorithm, we find the class $c_{k}$'s mean to which a sample $x_{i}$ is closest to by calculating the Euclidean distance (L2-norm) between a test sample and the mean vector. Table \ref{table:ncc} details performance and accuracy, while figure \ref{fig:orlnc} and \ref{fig:mnistnc} shows the resulting labels on scatter plots. The tests were performed on full-dimensional sets and PCA reduced sets. Accuracy is the number of resulting labels that equal the testing labels divided by the number of test samples.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
-		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
 		ORL & 94,1\% & 0.00 \\ \hline
 		ORL w. PCA & 15,8\% & 0.00 \\ \hline
 		MNIST & 75,2\% & 0.34 \\ \hline
@@ -326,12 +321,12 @@ Nearest Centroid was performed on ORL and MNIST. To test the algorithm, we find 
 
 \subsection{NSC}
 
-Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N_{sc}=2, N_{sc}=3, N_{sc}=5$ for number of subclasses. Our algorithm returns centroids for number of classes $N_{c}=N_{ck}*N_{sc}$. We classify a testing sample to a class of which its centroid it is closest to. Table \ref{table:nsc} details the results and figure X and X shows the resulting labels on plots. $N_{sc}$ is number of subclasses.
+Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N_{sc}=2, N_{sc}=3, N_{sc}=5$ for number of subclasses. Our algorithm returns centroids for number of classes $N_{c}=N_{ck}*N_{sc}$. We classify a testing sample to a class of which its centroid it is closest to. Table \ref{table:nsc} details the result. $N_{sc}$ is number of subclasses. Figure \ref{fig:orlnsc} and \ref{fig:mnistnsc} show the NSC on the ORL and MNIST data set. The blue color represents test labels, the red color represents result labels. Each test sample is plotted to their class.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
-		Dataset & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{$N_{sc}$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
 		ORL & 2 & 93.3 & 0.15 \\ \hline
 		ORL & 3 & 95 & 0.15 \\ \hline
 		ORL & 5 & 95.8 & 0.15 \\ \hline
@@ -347,14 +342,14 @@ Nearest Subclass Centroid was performed on ORL and MNIST with hyper-parameter $N
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/ORL_NSC}}
+	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/ORL_NSC}}
 	\caption{Plot results of NSC on ORL with $N_{sc}=2$.}
 	\label{fig:orlnsc}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\frame{\includegraphics[width=0.7\linewidth]{../ML/results/MNIST_NSC}}
+	\frame{\includegraphics[width=0.6\linewidth]{../ML/results/MNIST_NSC}}
 	\caption{Plot results of NSC on MNIST with $N_{sc}=2$.}
 	\label{fig:mnistnsc}
 \end{figure}
@@ -366,7 +361,7 @@ Nearest Neighbor classifier was performed on ORL and MNIST. To classify a test s
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
-		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
 		ORL & 95.8\% & 0.04 \\ \hline
 		ORL w. PCA & 11.6\% & 0.01 \\ \hline
 		MNIST & 96.9\% & 676.07 \\ \hline
@@ -391,18 +386,18 @@ Nearest Neighbor classifier was performed on ORL and MNIST. To classify a test s
 		\textbf{9}  & 6          & 1          & 3          & 14         & 5          & 13         & 5          & 4          & 920        & 5           \\
 		\textbf{10} & 2          & 5          & 1          & 6          & 10         & 5          & 1          & 11         & 1          & 967 \\ \hline   
 	\end{tabular}
-	\caption{Confusion matrix for NNC performed on MNIST.}
+	\caption{Confusion matrix for a NNC model tested on MNIST.}
 	\label{table:nnconfusion}
 \end{table}
 
 \subsection{Perceptron with BP}
 
-A perceptron was trained on both data sets with the learning rate $\eta$ as hyper-parameter for $\eta=0.01$, $\eta=0.1$, $\eta=1$ and $\eta=10$. For each test sample, we calculate the decision function $y = w(k)*x_{i}$ for each class $c_{k}$ and classify it to the class with maximizes the function. A maximum number of iterations per class is set to 100. Table \ref{table:perceptronbp} details the results, figure X and X show plots of the resulting labels and \ref{fig:mnistperceptronlinebp1dpca} and \ref{fig:mnistperceptronlinebp2dpca} show the perceptron line in 1D and 2D with PCA.
+A perceptron was trained on both data sets with the learning rate $\eta$ as hyper-parameter for $\eta=0.01$, $\eta=0.1$, $\eta=1$ and $\eta=10$. For each test sample, we calculate the decision function $y = w(k)*x_{i}$ for each class $c_{k}$ and classify it to the class with maximizes the function. A maximum number of iterations per class is set to 100. Table \ref{table:perceptronbp} details the results, figure \ref{fig:orlperceptronbp} and \ref{fig:mnistperceptronbp} show plots of the resulting labels and \ref{fig:mnistperceptronlinebp1dpca} and \ref{fig:mnistperceptronlinebp2dpca} show the classification perceptron line in 1D and 2D with PCA.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|l|} \hline
-		Dataset & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{$\eta$} & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
 		ORL & 0.01 & 86.6 & 1.39 \\ \hline
 		ORL & 0.1 & 84.1 & 1.30 \\ \hline
 		ORL & 1 & 82.5 & 1.36 \\ \hline
@@ -448,12 +443,12 @@ A perceptron was trained on both data sets with the learning rate $\eta$ as hype
 
 \subsection{Perceptron with MSE}
 
-A perceptron was trained on both data sets. Like with backpropagation, we find the class that maximize the decision function $y = w(k)*x_{i}$ for each sample and classify it to that class. Table \ref{table:perceptronmse} details the results, figure \ref{fig:orlperceptronmse} and \ref{fig:mnistperceptronmse} shows plots with the resulting labels and \ref{fig:mnistperceptronlinemse2dpca} show the perceptron in action on the PCA set.
+A perceptron using least-squares was trained on both data sets. Like with backpropagation, we find the class that maximize the decision function $y = w(k)*x_{i}$ for each sample and classify it to that class. Table \ref{table:perceptronmse} details the results, figure \ref{fig:orlperceptronmse} and \ref{fig:mnistperceptronmse} shows plots with the resulting labels.
 
 \begin{table}[H]
 	\centering
 	\begin{tabular}{|l|l|l|} \hline
-		Dataset & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
+		Data set & \pbox{18cm}{Accuracy in $\%$} & \pbox{18cm}{Execution time in $s$} \\ \hline
 		ORL & 90\% & 0.05 \\ \hline
 		ORL w. PCA & 10\% & 0.01 \\ \hline
 		MNIST & 86\% & 6.79 \\ \hline
@@ -479,50 +474,13 @@ A perceptron was trained on both data sets. Like with backpropagation, we find t
 
 \section{Discussion}
 
-As expected, the algorithms performed differently given the complexity and dimensionality of the data set. If a classification scheme is fast and accurate on a small data set, like ORL ($D=1200$), it might not replicate on a larger set like MNIST ($D=60000$). PCA showed a computational easy way to reduce dimensionality, but accuracy with PCA data lacked in all our tests, averaging around 15\%, even though the execution times were similar to that of the full dimensional sets. Nearest Centroid Classifier (NSC) gained an impressive accuracy on ORL (94.1\%), but struggled on MNIST (75.2\%). Nearest Subclass Centroid (NSC) proved high classification precision, with a 2\% difference between 2 and 5 sublclasses on ORL, and 3.9\% on MNIST, however execution times doubled on MNIST with 5 subclasses compared to just 2. Nearest Neighbor (NNC) gave us the best results in terms of accuracy (95.8\% and 96.9\%), but suffered from very high execution times. Our perceptron with BP showed that a lower learning rate $\eta < 0.01$ gave better accuracy with similar execution times as tests with higher learning rate $\eta > 1$. The perceptron performed faster than nearest neighbor (around 2 and 11 minutes on MNIST, respectively) with similar accuracy, showing that a perceptron should be preferred over NNC on larger data sets. The one using least-squares (MSE) gave a sound accuracy on both sets, lower execution times and is a much more simple algorithm to implement and comprehend, though solving the generalized inverse often requires plenty computational resources.
+As expected, the algorithms performed differently given the complexity and dimensionality of the data set. If a classification scheme is fast and accurate on a small data set, like ORL ($D=1200$), it might not replicate on a larger set like MNIST ($D=60000$). PCA showed a computational easy way to reduce dimensionality, but accuracy with PCA data lacked in all our tests, averaging around 15\%, even though the execution times were similar to that of the full dimensional sets. Nearest Centroid Classifier (NSC) gained an impressive accuracy on ORL (94.1\%), but struggled on MNIST (75.2\%). Nearest Subclass Centroid (NSC) proved high classification precision, with a 2\% difference between 2 and 5 subclasses on ORL, and 3.9\% on MNIST, however execution times doubled on MNIST with five subclasses compared to just two. Nearest Neighbor (NNC) gave us the best results in terms of accuracy (95.8\% and 96.9\%), but suffered from very high execution times. Our perceptron with BP showed that a lower learning rate $\eta < 0.01$ gave better accuracy with similar execution times as tests with higher learning rate $\eta > 1$. The perceptron performed faster than nearest neighbor (around 2 and 11 minutes on MNIST, respectively) with similar accuracy, showing that a perceptron should be preferred over NNC on larger data sets. The one using least-squares (MSE) gave a sound accuracy on both sets, lower execution times and is a much more simple algorithm to implement and comprehend, though solving the generalized inverse often requires plenty computational resources.
 
 \section{Conclusion}
 
-In this report we have explained the workings of five popular classification algorithms, the mathematics behind them and benchmarked them on two famous data sets, the ORL set containing 40 different types of facial images and the MNIST set featuring images of numbers from zero to nine. We found that simple algorithms like nearest neighbor classifier (NNC) performs excellent on simple data sets with low dimensionality (like ORL), but struggles on more complex sets like MNIST. In such case, we found that a perceptron trained either by backpropagation or MSE is more suited because it is computational more cost effective, given a boundary is set on number of convergence attempts. Similar results are echoed in \cite{Roy2005}.
-
-%\end{frontmatter}
-
-%% The Appendices part is started with the command \appendix;
-%% appendix sections are then done as normal sections
-%% \appendix
-
-
-%% \section{}
-%% \label{}
-
-%% References
-%%
-%% Following citation commands can be used in the body text:
-%% Usage of \cite is as follows:
-%%   \cite{key}          ==>>  [#]
-%%   \cite[chap. 2]{key} ==>>  [#, chap. 2]
-%%   \citet{key}         ==>>  Author [#]
-
-%% References with bibTeX database:
+In this report we have explained the workings of five common classification algorithms including principal component analysis (PCA), the mathematics behind them and benchmarked them on two famous data sets, the ORL set containing 40 different types of facial images and the MNIST set featuring images of numbers from zero to nine. We found that simple algorithms like nearest neighbor classifier (NNC) performs excellent on simple data sets with low dimensionality (like ORL), but struggles on more complex sets like MNIST. In such case, we found that a perceptron trained either by backpropagation or MSE is more suited because it is computational more cost effective, given a boundary is set on number of convergence attempts.
 
 \bibliographystyle{plainnat}
 \bibliography{literature}
-
-%% Authors are advised to submit their bibtex database files. They are
-%% requested to list a bibtex style file in the manuscript if they do
-%% not want to use model1-num-names.bst.
-
-%% References without bibTeX database:
-
-%\begin{thebibliography}{00}
-
-%% \bibitem must have the following form:
-%%   \bibitem{key}...
-%%
-
-% \bibitem{}
-
-% \end{thebibliography}
- 
 
 \end{document}

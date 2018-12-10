@@ -53,16 +53,5 @@ for k = offset:nClasses-limit
     end
 end
 
-%confusion matrix
-
-%testLbls -> 40x120. 0 p? alle pladser som den
-%ikke er kvallet som, ellers 1.
-%confusionmat(testLbls,resLabels)
-
-%test
-%g = w'*test_tilde
-%r = g/norm(testData,2);
-
-
 
 

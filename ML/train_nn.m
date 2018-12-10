@@ -10,6 +10,7 @@ for i = 1:nTestImages
         %find the i closest to j
         dist(i,j) = norm(testData(:,i)-trainData(:,j),2)^2;
     end
+	%pick the i with the least distance
     [M,I] = min(dist(i,:));
     resLabels(i) = trainLbls(I);
 end
