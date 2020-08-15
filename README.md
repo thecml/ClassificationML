@@ -1,3 +1,3 @@
 # Matlab Machine Learning
 
-Popular machine-learning algorithms such as KNN and Perceptron done from scratch.
+Popular machine learning algorithms such as KNN and Perceptron done from scratch.
